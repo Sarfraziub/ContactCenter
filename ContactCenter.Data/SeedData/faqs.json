@@ -1,0 +1,110 @@
+[
+  {
+    "Id": "f8a2d34a-1f2b-4c44-8d4b-55a62b7b7e0b",
+    "Category": "Payments",
+    "Question": "Who can register?",
+    "Answer": "Anyone from the Dr Ruth S Mompati District with a valid ID or Passport."
+  },
+  {
+    "Id": "b3a90784-8d3c-4c9b-bb26-292d6b80b8d9",
+    "Category": "Payments",
+    "Question": "What's needed for me to access my municipality accounts on this App?",
+    "Answer": "You have to register with us here and provide us with your details and your municipal account number."
+  },
+  {
+    "Id": "a3c6710e-2a2e-45c1-a7cb-18a43a7382d6",
+    "Category": "Payments",
+    "Question": "Can I make payment plans on the app?",
+    "Answer": "Yes, you may."
+  },
+  {
+    "Id": "9ec9f5e0-bb8f-40e4-86b2-9872fffa8db4",
+    "Category": "Payments",
+    "Question": "How can I query an account?",
+    "Answer": "On the app, go to the account you want to query and click on query, then provide details and send."
+  },
+  {
+    "Id": "dd7d8e14-dc6b-4f89-91f8-5f8f2ae2f37e",
+    "Category": "Payments",
+    "Question": "How can I find my councillor?",
+    "Answer": "Go to find my councillor and type in your ward in the search bar."
+  },
+  {
+    "Id": "4e89f8f1-3b5a-44a9-b6ad-fd15be7fcd25",
+    "Category": "Payments",
+    "Question": "What is the report button for?",
+    "Answer": "You can report Fire and Disaster emergencies, Water issues, and Fraud and anti-corruption within the app."
+  },
+  {
+    "Id": "cc6d3fc7-4b93-49ea-8650-20fcb682f8e5",
+    "Category": "Registration",
+    "Question": "Who can register?",
+    "Answer": "Anyone from the Dr Ruth S Mompati District with a valid ID or Passport."
+  },
+  {
+    "Id": "7f9b1c63-5154-4a5d-b805-28b3a9e48c8a",
+    "Category": "Registration",
+    "Question": "What's needed for me to access my municipality accounts on this App?",
+    "Answer": "You have to register with us here and provide us with your details and your municipal account number."
+  },
+  {
+    "Id": "dc7c9e7f-8b4d-4c57-849a-0d84a4bc2e29",
+    "Category": "Registration",
+    "Question": "Can I make payment plans on the app?",
+    "Answer": "Yes, you may."
+  },
+  {
+    "Id": "cb5e41e7-59c2-4b3d-a5eb-d77b4cde9e26",
+    "Category": "Registration",
+    "Question": "How can I query an account?",
+    "Answer": "On the app, go to the account you want to query and click on query, then provide details and send."
+  },
+  {
+    "Id": "fb3b90b8-45d3-4b5e-8d89-6c979d5d312e",
+    "Category": "Registration",
+    "Question": "How can I find my councillor?",
+    "Answer": "Go to find my councillor and type in your ward in the search bar."
+  },
+  {
+    "Id": "90a7d924-6124-487e-b2a0-1bb95b7b02e8",
+    "Category": "Registration",
+    "Question": "What is the report button for?",
+    "Answer": "You can report Fire and Disaster emergencies, Water issues, and Fraud and anti-corruption within the app."
+  },
+  {
+    "Id": "7e2a5b7f-7c0f-4cf3-bb5b-b2c874d29e6d",
+    "Category": "Other",
+    "Question": "Who can register?",
+    "Answer": "Anyone from the Dr Ruth S Mompati District with a valid ID or Passport."
+  },
+  {
+    "Id": "64f1e8f2-7c4c-4e2a-bb5f-bb52e1b9f8a1",
+    "Category": "Other",
+    "Question": "What's needed for me to access my municipality accounts on this App?",
+    "Answer": "You have to register with us here and provide us with your details and your municipal account number."
+  },
+  {
+    "Id": "c3b5d8a1-3e2b-4fa6-a5f8-4f1b78a3d0c7",
+    "Category": "Other",
+    "Question": "Can I make payment plans on the app?",
+    "Answer": "Yes, you may."
+  },
+  {
+    "Id": "f5d9e6b4-8c3e-48a7-a5d2-5b2e1c1a9f8d",
+    "Category": "Other",
+    "Question": "How can I query an account?",
+    "Answer": "On the app, go to the account you want to query and click on query, then provide details and send."
+  },
+  {
+    "Id": "b7f9e8f4-5d3b-40c6-a7e5-9f2e0a4d7b9f",
+    "Category": "Other",
+    "Question": "How can I find my councillor?",
+    "Answer": "Go to find my councillor and type in your ward in the search bar."
+  },
+  {
+    "Id": "d9f1e8f4-6c2a-4a5f-8d7b-3f4c7e0b1d2a",
+    "Category": "Other",
+    "Question": "What is the report button for?",
+    "Answer": "You can report Fire and Disaster emergencies, Water issues, and Fraud and anti-corruption within the app."
+  }
+]

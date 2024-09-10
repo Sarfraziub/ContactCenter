@@ -1,0 +1,32 @@
+﻿@page
+@model IndexModel
+@section breadcrumb{
+    <a class="breadcrumb-item" asp-page="/Index">Config</a>
+    <a class="breadcrumb-item" asp-page="Index">Call categories</a>
+}
+    @if (User.IsAdmin())
+{
+    @section actionbar{
+    <a asp-page="Add" class="btn btn-primary"><i class="fa fa-plus"></i> Add new..</a>
+    }
+}
+<h4 class="font-weight-light mb-0">Call @("Category".ToQuantity(Model.List.TotalItemCount)) @(Model.QueryString != null ? "found" : "")</h4>
+@if (Model.List.PageCount > 1)
+{
+    <div class="text-muted mb-3 font-weight-light">Page <strong>@Model.List.PageNumber</strong> of <strong>@Model.List.PageCount</strong></div>
+}
+<table class="table table-striped table-sm table-hover border-bottom">
+    <thead>
+        <tr>
+            <th>Name</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.List)
+        {
+            <tr>
+                <td><a asp-page="./Details" asp-route-id="@item.Id">@item.Name</a></td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,197 @@
+@page
+@model IndexModel
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+
+
+<table class="table table-sm table-hover">
+    <thead>
+        <tr>
+            <th>Ticket number</th>
+            <th>Status</th>
+            <th>Ticket type</th>
+            <th>Contact</th>
+            <th>Assigned to</th>
+            <th>Creation date</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.List)
+        {
+            <tr>
+                <td><a asp-page="./Detail" asp-route-id="@item.Number">@item.Number</a></td>
+                <td class="small">@item.StatusName</td>
+                <td class="small">@item.Type</td>
+
+                @* Retrieve and display the phone number *@
+                <td class="small">
+                    @{
+                        var userContact = Model.ContactUser.FirstOrDefault(uc => uc.Id == item.CreatorId);
+                        if (userContact != null)
+                        {
+                            @userContact.PhoneNumber
+                        }
+                        else
+                        {
+                            @:N/A
+                        }
+                    }
+                </td>
+
+                <td class="small">@item.Assignee.LoginId</td>
+                <td>@item.CreationDate.ToShortDate() </td>
+                <td>
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#incidentModal-@item.Id">
+                        View More
+                    </button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+@Html.AntiForgeryToken()
+
+@foreach (var item in Model.List)
+{
+    <div class="modal fade" id="incidentModal-@item.Id" tabindex="-1" role="dialog" aria-labelledby="incidentModalLabel-@item.Id">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title" id="incidentModalLabel-@item.Id">Incident Details</h3>
+                    @* <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button> *@
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h4>Incident Information</h4>
+                            <div class="form-group row">
+                                <label for="reference" class="col-sm-2 col-form-label">Reference:</label>
+                                <div class="col-sm-4">
+                                    <p id="reference">@item.Number</p>
+                                </div>
+                                <label for="status" class="col-sm-2 col-form-label">Status:</label>
+                                <div class="col-sm-4">
+                                    <p id="status">@item.StatusName</p>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="heading" class="col-sm-2 col-form-label">Heading:</label>
+                                <div class="col-sm-4">
+                                    <p id="heading">@item.Description</p>
+                                </div>
+                                @*  <label for="contactNumber" class="col-sm-2 col-form-label">Contact No:</label>
+                            <div class="col-sm-4">
+                            <p id="contactNumber">@item.nu</p>
+                            </div> *@
+                            </div>
+                            <div class="form-group row">
+                                <label for="assignedTo" class="col-sm-2 col-form-label">Assigned to:</label>
+                                <div class="col-sm-4">
+                                    <p id="assignedTo">@item.Assignee.LoginId</p>
+                                </div>
+                                <label for="creationDate" class="col-sm-2 col-form-label">Creation Date:</label>
+                                <div class="col-sm-4">
+                                    <p id="creationDate">@item.CreationDate.ToShortDate()</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <h4>Incident Audits</h4>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Status</th>
+                                <th>Updated By</th>
+                             
+                                <th>Details</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var audit in item.TicketAudits)
+                            {
+                                <tr>
+                                    <td>@audit.StatusChangeTime.ToLongDateTime()</td>
+                                    <td>@audit.StatusName</td>
+                                    <td>@audit.NameOfUpdater @audit.SurnameOfUpdater</td>
+                                    
+                                    <td>@audit.Description</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    <div class="row">
+                        @* <div class="col-md-4">
+                    <h4>Description</h4>
+                    <p>@item.Description</p>
+                    </div>
+                    <div class="col-md-4">
+                    <h4>Incident Type</h4>
+                    <p>@item.IncidentType.TypeName</p>
+                    </div> *@
+                        <div class="col-md-4">
+                            <h4>Incident Status</h4>
+                            <select class="form-control" id="incidentStatus" onchange="updateStatus('@item.Id', this.value)">
+                                @foreach (var status in Model.Statuses)
+                                {
+                                    <option value="@status.Id" selected="@(item.StatusId == status.Id ? "true" : null)">@status.StatusName</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row status-inputs" style="display: none;">
+                       
+                        <div class="col-md-4">
+                            <h4>Description</h4>
+                            <textarea id="description" placeholder="description" class="form-control"></textarea>
+                        </div>
+                        <div class="col-md-4">
+                            <button onclick="saveStatus('@item.Id')" class="btn btn-primary" style="margin-top: 59px;">Save</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<script>
+    function updateStatus(incidentId, statusId) {
+        debugger;
+        $('.status-inputs').show();
+    }
+    function saveStatus(incidentId) {
+        var person = {
+            "TicketId": incidentId,
+            "StatusId": $('#incidentStatus').val(),
+            "StatusName": $('#incidentStatus option:selected').text(),
+            "Summary": $('#summary').val(),
+            "Description": $('#description').val()
+        };
+        $.ajax({
+            type: "POST",
+            url: "/Tickets?handler=Status",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: JSON.stringify(person),
+            headers: {
+                'Content-Type': 'application/json',
+                RequestVerificationToken:
+                    $('input:hidden[name="__RequestVerificationToken"]').val()
+            },
+            processData: false
+        })
+            .done(function (result) {
+                alert("status has been updated successfully");
+                window.location.reload();
+            });
+    }
+</script>

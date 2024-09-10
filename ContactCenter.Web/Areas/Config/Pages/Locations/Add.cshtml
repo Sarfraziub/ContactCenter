@@ -1,0 +1,35 @@
+﻿@page
+@model AddModel
+@section breadcrumb{
+    <a class="breadcrumb-item" asp-page="/Index">Config</a>
+    <a class="breadcrumb-item" asp-page="Index">Locations</a>
+    <a class="breadcrumb-item" asp-page="Add">Add</a>
+}
+    <form method="post">
+        <div class="card">
+            <div class="card-body">
+                <div class="row mb-3">
+                    <label class="col-md-3">Name<i class="text-danger">*</i></label>
+                    <div class="col-md-9">
+                        <input asp-for="Location.Name" maxlength="256" required class="form-control" />
+                        <span asp-validation-for="Location.Name" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label class="col-md-3">Parent location</label>
+                    <div class="col-md-9">
+                        <select asp-for="Location.ParentId" class="form-control select2" asp-items="Model.Parents">
+                            <option value="">Select..</option>
+                        </select>
+                        <span asp-validation-for="Location.ParentId" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <button class="btn btn-success"><i class="fa fa-save"></i> Save</button>
+            </div>
+        </div>
+    </form>
+    @section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    }

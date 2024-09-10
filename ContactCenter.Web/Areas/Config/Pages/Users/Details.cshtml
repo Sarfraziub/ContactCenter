@@ -1,0 +1,90 @@
+﻿@page "{id:Guid?}"
+@model DetailsModel
+@section breadcrumb {
+    <a class="breadcrumb-item" href="#">Config</a>
+    <a class="breadcrumb-item" asp-page="Index" asp-route-id="">Users</a>
+    <a class="breadcrumb-item" asp-page="Details" asp-route-id="@Model.SelectedUser.Id">@Model.SelectedUser.LoginId</a>
+}
+    @section actionbar {
+    @if (User.IsAdmin())
+    {
+        <a asp-page="Edit" asp-route-id="@Model.SelectedUser.Id" class="btn btn-primary"><i class="fa fa-user-edit"></i> Edit account..</a>
+        if (!Model.IsCurrentUser && Model.SelectedUser.IsEmailConfirmed)
+        {
+            if (Model.SelectedUser.IsActive)
+            {
+                <a asp-page-handler="Status" asp-route-id="@Model.SelectedUser.Id" class="btn btn-danger"><i class="fa fa-lock"></i> Deactivate..</a>
+            }
+            else
+            {
+                <a asp-page-handler="Status" asp-route-id="@Model.SelectedUser.Id" class="btn btn-success"><i class="fa fa-lock-open"></i> Activate..</a>
+            }
+        }
+    }
+}
+    <div class="card">
+        <div class="card-body pb-0">
+            <div class="row mb-3">
+                <label class="col-md-3 text-muted">Login Id</label>
+                <div class="col-md-9">@Model.SelectedUser.LoginId</div>
+            </div>
+            <div class="row mb-3">
+                <label class="col-md-3 text-muted">Role</label>
+                <div class="col-md-9">@Model.SelectedUser.Role</div>
+            </div>
+            <div class="row mb-3">
+                <label class="col-md-3 text-muted">Full name</label>
+                <div class="col-md-9">@Model.SelectedUser.Name</div>
+            </div>
+            <div class="row mb-3">
+                <label class="col-md-3 text-muted">Email</label>
+                <div class="col-md-9">@Model.SelectedUser.Email</div>
+            </div>
+            @if (!string.IsNullOrWhiteSpace(Model.SelectedUser.Mobile))
+        {
+            <div class="row mb-3">
+                <label class="col-md-3 text-muted">Mobile</label>
+                <div class="col-md-9">@Model.SelectedUser.Mobile</div>
+            </div>
+        }
+        <div class="row mb-3">
+            <label class="col-md-3 text-muted">Account status</label>
+            <div class="col-md-9">
+                @Model.SelectedUser.AccountStatusHtml()
+                @if (!Model.SelectedUser.IsEmailConfirmed)
+                {
+                    <div class="text-muted">(Activation email sent to the user)</div>
+                    <a asp-page-handler="SendActivation" asp-route-id="@Model.SelectedUser.Id" class="btn btn-outline-success btn-sm"><i class="fa fa-envelope"></i>&nbsp;Resend activation email..</a>
+                    if (User.IsAdmin())
+                    {
+                        <div class="input-group input-group-sm mt-2">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text">Activation link</div>
+                            </div>
+                            <input type="text" readonly class="form-control" value="@Model.SelectedUser.GetActivationLink(Request)" />
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+
+    </div>
+    @if (User.IsAdmin())
+    {
+        <div class="card-footer">
+            <div class="small row text-start">
+                <div class="col-3">
+                    <div class="text-muted">Account creation date</div>
+                    <div>@Model.SelectedUser.CreationDate</div>
+                </div>
+                @if (Model.SelectedUser.LastLoginDate.HasValue)
+                {
+                    <div class="col-3">
+                        <div class="text-muted">Last login date</div>
+                        <div>@Model.SelectedUser.LastLoginDate</div>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+</div>

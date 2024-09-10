@@ -1,0 +1,10 @@
+[
+  {
+    "Id": 1,
+    "ContactMethod": "SMS"
+  },
+  {
+    "Id": 2,
+    "ContactMethod": "Email"
+  }
+]

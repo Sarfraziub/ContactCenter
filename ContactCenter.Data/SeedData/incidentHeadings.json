@@ -1,0 +1,92 @@
+[
+  {
+    "Id": 1,
+    "TicketTypeId": 1,
+    "HeadingName": "Report Fire Incident"
+  },
+  {
+    "Id": 2,
+    "TicketTypeId": 1,
+    "HeadingName": "Report Disaster"
+  },
+  {
+    "Id": 3,
+    "TicketTypeId": 1,
+    "HeadingName": "Report Accident"
+  },
+  {
+    "Id": 4,
+    "TicketTypeId": 1,
+    "HeadingName": "Request Assistance"
+  },
+  {
+    "Id": 5,
+    "TicketTypeId": 1,
+    "HeadingName": "Track Emergency Report"
+  },
+  {
+    "Id": 6,
+    "TicketTypeId": 1,
+    "HeadingName": "Report Water Leak"
+  },
+  {
+    "Id": 7,
+    "TicketTypeId": 2,
+    "HeadingName": "No Water Supply"
+  },
+  {
+    "Id": 8,
+    "TicketTypeId": 2,
+    "HeadingName": "Water Quality Concerns"
+  },
+  {
+    "Id": 9,
+    "TicketTypeId": 2,
+    "HeadingName": "Request Assistance"
+  },
+  {
+    "Id": 10,
+    "TicketTypeId": 2,
+    "HeadingName": "Water Billing Queries"
+  },
+  {
+    "Id": 11,
+    "TicketTypeId": 2,
+    "HeadingName": "Track Resolution"
+  },
+  {
+    "Id": 12,
+    "TicketTypeId": 2,
+    "HeadingName": "View Emergency Contacts"
+  },
+  {
+    "Id": 13,
+    "TicketTypeId": 3,
+    "HeadingName": "Report Fraud"
+  },
+  {
+    "Id": 14,
+    "TicketTypeId": 3,
+    "HeadingName": "Report Corruption"
+  },
+  {
+    "Id": 15,
+    "TicketTypeId": 4,
+    "HeadingName": "Request Ambulance"
+  },
+  {
+    "Id": 16,
+    "TicketTypeId": 4,
+    "HeadingName": "Crime"
+  },
+  {
+    "Id": 17,
+    "TicketTypeId": 4,
+    "HeadingName": "Riot Alert"
+  },
+  {
+    "Id": 18,
+    "TicketTypeId": 4,
+    "HeadingName": "Other"
+  }
+]

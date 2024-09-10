@@ -1,0 +1,12 @@
+﻿@{
+    var area = ViewContext.RouteData.Values["area"]?.ToString().ToLower();
+    var page = ViewContext.RouteData.Values["page"]?.ToString().ToLower();
+    var id = ViewContext.RouteData.Values["id"]?.ToString();
+}
+<nav>
+    <a asp-page="/CallCategories/Index" asp-route-id="" asp-area="Config" class="@(page.Contains("call") ? "active" : "")"><i class="fa-solid fa-table-list"></i> Call categories</a>
+    <a asp-page="/TicketCategories/Index" asp-route-id="" asp-area="Config" class="@(page.Contains("ticket") ? "active" : "")"><i class="fa-solid fa-table-list"></i> Ticket categories</a>
+    <a asp-page="/Locations/Index" asp-route-id="" asp-area="Config" class="@(page.Contains("/locations") ? "active" : "")"><i class="fa-solid fa-map-location"></i> Locations</a>
+    <a asp-page="/Email/Index" asp-route-id="" asp-area="Config" class="@(page.Contains("/email") ? "active" : "")"><i class="fa fa-envelope"></i> Email config</a>
+    <a asp-page="/Users/Index" asp-route-id="" asp-area="Config" class="@(page.Contains("/users") ? "active" : "")"><i class="fa fa-user-cog"></i> Users</a>
+</nav>

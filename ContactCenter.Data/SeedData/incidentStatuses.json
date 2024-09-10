@@ -1,0 +1,50 @@
+[
+  {
+    "Id": 1,
+    "StatusName": "PENDING"
+  },
+  {
+    "Id": 2,
+    "StatusName": "IN_PROGRESS"
+  },
+  {
+    "Id": 3,
+    "StatusName": "RESOLVED"
+  },
+  {
+    "Id": 4,
+    "StatusName": "CANCELLED"
+  },
+  {
+    "Id": 5,
+    "StatusName": "Technicians onsite"
+  },
+  {
+    "Id": 6,
+    "StatusName": "Testing"
+  },
+  {
+    "Id": 7,
+    "StatusName": "Awaiting approval"
+  },
+  {
+    "Id": 8,
+    "StatusName": "Service restored"
+  },
+  {
+    "Id": 9,
+    "StatusName": "Arrest made"
+  },
+  {
+    "Id": 10,
+    "StatusName": "Signed off"
+  },
+  {
+    "Id": 11,
+    "StatusName": "Resolved"
+  },
+  {
+    "Id": 12,
+    "StatusName": "Complete"
+  }
+]

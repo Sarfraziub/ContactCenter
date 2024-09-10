@@ -1,0 +1,61 @@
+﻿@page
+@model IndexModel
+@section breadcrumb{
+    <a class="breadcrumb-item" asp-page="/Index">Agents</a>
+}
+    @if (!Model.Agents.Any(c => c.IsOnline))
+{
+    <div class="text-danger h5">No online agents</div>
+}
+else
+{
+        <h3>@("Online agent".ToQuantity(Model.Agents.Count(c=>c.IsOnline)))</h3>
+    <hr />
+
+    <div class="row">
+        @foreach (var item in Model.Agents.Where(c => c.IsOnline))
+        {
+            <div class="col-2">
+                <div class="card-sm">
+                    <div>
+                        <i class="fa fa-circle pt-1 px-2" style="color:limegreen"></i>
+                    </div>
+                    <div class="card-body text-center pt-0">
+                        <i class="fa fa-circle-user fa64 text-black-50"></i>
+                        <div><a asp-route-id="@item.Id">@item.Creator.Name</a></div>
+                        <strong>@item.Extension</strong>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+@if (Model.Agents.Any(c => !c.IsOnline))
+{
+    <div class="list-group-item list-group-item-action list-group-item-light h5 mt-4 mb-1 dropdown-toggle" data-bs-toggle="collapse" data-bs-target="#agents">
+        All agents
+    </div>
+    <div id="agents" class="show collapse">
+        <div class="card">
+            <table class="table table-sm table-striped table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th>Status</th>
+                        <th>Agent</th>
+                        <th>Extension</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Agents)
+                    {
+                        <tr>
+                            <td>@item.Status.ToHtml()</td>
+                            <td><a asp-route-id="@item.Id" asp-page="./Details">@item.Creator.Name</a></td>
+                            <td>@item.Extension</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}

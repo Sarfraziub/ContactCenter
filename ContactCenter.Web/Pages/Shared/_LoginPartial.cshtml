@@ -1,0 +1,27 @@
+﻿@using Microsoft.AspNetCore.Identity
+
+<ul class="navbar-nav">
+    @if (User.Identity.IsAuthenticated)
+    {
+        <li class="nav-item">
+            <a class="nav-link" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">
+                @if (User.IsAgent())
+                {
+                    <span>@User.AgentStatus().ToHtml(false)</span>
+                }
+                <i class="fa fa-user-gear text-dark"></i> @User.Identity.Name
+            </a>
+        </li>
+        <li class="nav-item">
+            <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/", new { area = "" })" method="post">
+                <button type="submit" class="nav-link btn btn-link text-danger">Logout <i class="fa fa-arrow-right"></i></button>
+            </form>
+        </li>
+    }
+    else
+    {
+        <li class="nav-item">
+            <a class="nav-link" asp-area="Identity" asp-page="/Account/Login" title="Login">Sign-in <i class="fa fa-sign-in-alt text-success"></i></a>
+        </li>
+    }
+</ul>

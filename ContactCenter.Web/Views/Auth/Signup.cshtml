@@ -1,0 +1,62 @@
+﻿@model ContactCenter.Web.Models.SignupViewModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<form asp-action="Signup" method="post">
+    <div class="form-group">
+        <label asp-for="Name"></label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Surname"></label>
+        <input asp-for="Surname" class="form-control" />
+        <span asp-validation-for="Surname" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Username"></label>
+        <input asp-for="Username" class="form-control" />
+        <span asp-validation-for="Username" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Email"></label>
+        <input asp-for="Email" class="form-control" />
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="MunicipalityAccountNumber"></label>
+        <input asp-for="MunicipalityAccountNumber" class="form-control" />
+        <span asp-validation-for="MunicipalityAccountNumber" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="CellphoneNumber"></label>
+        <input asp-for="CellphoneNumber" class="form-control" />
+        <span asp-validation-for="CellphoneNumber" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="IdentificationNumber"></label>
+        <input asp-for="IdentificationNumber" class="form-control" />
+        <span asp-validation-for="IdentificationNumber" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="IdentificationTypeId"></label>
+        <select asp-for="IdentificationTypeId" class="form-control" asp-items="Model.IdentificationTypes"></select>
+        <span asp-validation-for="IdentificationTypeId" class="text-danger"></span>
+    </div>
+    <div class="form-group" id="countryDropdown" style="display:none;">
+        <label asp-for="CountryOfOriginId"></label>
+        <select asp-for="CountryOfOriginId" class="form-control" asp-items="Model.Countries"></select>
+        <span asp-validation-for="CountryOfOriginId" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Sign Up</button>
+</form>
+
+<script>
+    document.getElementById('IdentificationType').addEventListener('change', function () {
+        var countryDropdown = document.getElementById('countryDropdown');
+        if (this.value == '1') { // Assuming '1' is the value for Passport
+            countryDropdown.style.display = 'block';
+        } else {
+            countryDropdown.style.display = 'none';
+        }
+    });
+</script>

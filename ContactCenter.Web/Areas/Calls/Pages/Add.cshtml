@@ -1,0 +1,122 @@
+﻿@page "{id?}"
+@model AddModel
+@section breadcrumb{
+    <a class="breadcrumb-item" asp-page="/Index">Calls</a>
+    <a class="breadcrumb-item" asp-page="/Add">New call..</a>
+}
+    @if (Model.Number == null)
+{
+    <form method="get">
+        <div class="row">
+            <div class="col-6">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="form-floating mb-2">
+                            <input name="Id" type="number" class="form-control" maxlength="16" step="1" required />
+                            <label for="Id">Contact number<i class="text-danger">*</i></label>
+                        </div>
+                    </div>
+                    <div class="card-footer"><button class="btn btn-primary">Next <i class="fa fa-arrow-right"></i></button></div>
+                </div>
+            </div>
+        </div>
+    </form>
+}
+else
+{
+    <form method="post">
+        <input type="hidden" asp-for="StartTime" value="@DateTime.Now.Ticks" />
+        <div class="text-end mb-2">
+            <button class="btn btn-danger"><i class="fa fa-phone-slash"></i> End call</button>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card">
+                    <h5 class="card-header">Contact details</h5>
+                    <div class="card-body">
+                        <div class="form-floating mb-3">
+                            <input asp-for="Number" readonly class="form-control" />
+                            <label asp-for="Number">Caller ID</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input asp-for="Contact.Name" required class="form-control" />
+                            <label asp-for="Contact.Name">Full name</label>
+                            <span asp-validation-for="Contact.Name"></span>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input asp-for="Contact.Address" class="form-control" />
+                            <label asp-for="Contact.Address">Residential address</label>
+                            <span asp-validation-for="Contact.Address"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="Contact.LocationId" class="text-muted small">Location</label>
+                            <select asp-for="Contact.LocationId" required class="form-control select2" asp-items="Model.Locations">
+                                <option value="">Select location..</option>
+                            </select>
+                            <span asp-validation-for="Contact.LocationId"></span>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input asp-for="Contact.Email" type="email" class="form-control" />
+                            <label asp-for="Contact.Email">Email address</label>
+                            <span asp-validation-for="Contact.Email"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <h5 class="card-header">Call details</h5>
+                    <div class="card-body">
+                        <div class="form-floating mb-3">
+                            <select asp-for="Call.CategoryId" required class="form-control select2" asp-items="Model.CallCategories">
+                                <option value="">Select call category..</option>
+                            </select>
+                            <label asp-for="Call.CategoryId">Location</label>
+                            <span asp-validation-for="Call.CategoryId"></span>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <textarea asp-for="Comments" rows="5" class="form-control" style="height:100px"></textarea>
+                            <label asp-for="Comments">Comments</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <h5 class="card-header">Tickets</h5>
+                    <div class="card-body pb-2">
+                        <label>
+                            <input type="checkbox" data-bs-toggle="collapse" data-bs-target="#newTicket" />
+                            Create new ticket
+                        </label>
+                        <div id="newTicket" class="collapse hide">
+                            <hr />
+                            <div class="mb-3">
+                                <label class="text-muted small">Ticket type</label>
+                                <select asp-for="Ticket.Type" required class="form-control select2" asp-items="@Html.GetListItems<Lib.TicketType>()">
+                                    <option value="">Select..</option>
+                                </select>
+                                <span asp-validation-for="Ticket.Type"></span>
+                            </div>
+                            <div class="mb-3">
+                                <label class="text-muted small">Ticket category</label>
+                                <select asp-for="Ticket.CategoryId" required class="form-control select2" asp-items="Model.TicketCategories">
+                                    <option value="">Select..</option>
+                                </select>
+                                <span asp-validation-for="Ticket.CategoryId"></span>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <textarea asp-for="Ticket.Description" rows="5" class="form-control" style="height:100px"></textarea>
+                                <label asp-for="Ticket.Description">Comments</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+}
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    }

@@ -1,0 +1,94 @@
+﻿@page "{id:Guid}"
+@model DetailsModel
+@section breadcrumb{
+    <a class="breadcrumb-item" asp-page="/Index">Config</a>
+    <a class="breadcrumb-item" asp-page="Index" asp-route-id="">Emails</a>
+    <a class="breadcrumb-item" asp-page="Details" asp-route-id="@Model.EmailConfig.Id">@Model.EmailConfig.Name</a>
+}
+@if (User.IsAdmin())
+{
+    @section actionbar {
+        <a asp-page="Edit" asp-route-id="@Model.EmailConfig.Id" class="btn btn-primary"><i class="fa fa-edit"></i>&nbsp;Edit..</a>
+        @if (Model.EmailConfig.IsActive)
+        {
+            <a asp-page-handler="Status" asp-route-id="@Model.EmailConfig.Id" asp-route-statusId="0" class="btn btn-outline-danger"><i class="fa fa-lock"></i>&nbsp;Deactivate..</a>
+        }
+        else
+        {
+            <a asp-page-handler="Status" asp-route-id="@Model.EmailConfig.Id" asp-route-statusId="1" class="btn btn-outline-success"><i class="fa fa-lock-open"></i>&nbsp;Activate..</a>
+        }
+    }
+}
+<div class="row">
+    <div class="col-md-8">
+        @if (Model.IsTestSuccessful.HasValue)
+        {
+            if (Model.IsTestSuccessful.Value)
+            {
+                <div class="alert alert-success border-success">
+                    <div class="h4">Test message successfully sent</div>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button><p>Please check <strong>@Model.CurrentUser.Email</strong> to verify.</p>
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-danger border-danger">
+                    <div class="h4">Sending test message failed!</div>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <p>@Model.ErrorMessage</p>
+                </div>
+            }
+        }
+        <div class="card">
+            <div class="card-body">
+                <div class="row mb-3">
+                    <label class="col-md-3 text-muted">Name</label>
+                    <div class="col-md-9">@Model.EmailConfig.Name</div>
+                </div>
+                <div class="row mb-3">
+                    <label class="col-md-3 text-muted">Status</label>
+                    <div class="col-md-9"><span class="badge badge-@(Model.EmailConfig.IsActive?"success":"danger")">@(Model.EmailConfig.IsActive ? "ACTIVE" : "DEACTIVE")</span></div>
+                </div>
+                <div class="row mb-3">
+                    <label class="col-md-3 text-muted">Sender Id</label>
+                    <div class="col-md-9">@Model.EmailConfig.SenderId</div>
+                </div>
+                <div class="row mb-3">
+                    <label class="col-md-3 text-muted">User-name</label>
+                    <div class="col-md-9">@Model.EmailConfig.Username</div>
+                </div>
+                @if (!string.IsNullOrWhiteSpace(Model.EmailConfig.SenderDisplayName))
+                {
+                    <div class="row mb-3">
+                        <label class="col-md-3 text-muted">Sender display name</label>
+                        <div class="col-md-9">@Model.EmailConfig.SenderDisplayName</div>
+                    </div>
+                }
+                <div class="row mb-3">
+                    <label class="col-md-3 text-muted">Email server</label>
+                    <div class="col-md-9">@Model.EmailConfig.Host:@Model.EmailConfig.Port</div>
+                </div>
+                <div class="row">
+                    <label class="col-md-3 text-muted">Enable SSL</label>
+                    <div class="col-md-9"><span class="badge badge-@(Model.EmailConfig.EnableSsl?"success":"danger")">@(Model.EmailConfig.EnableSsl ? "YES" : "NO")</span></div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <a asp-page-handler="SendTest" class="btn btn-outline-primary">Send a test email to myself..</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <h4>Use config for:</h4>
+        @foreach (EmailConfigTarget item in Enum.GetValues(typeof(EmailConfigTarget)))
+        {
+            <div><label><i class="fa fa-@(Model.EmailConfig.Target.HasFlag(item) ? "check-circle text-info" : "circle-notch")"></i> @item.ToEnumString()</label></div>
+        }
+    </div>
+
+</div>
+

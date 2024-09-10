@@ -1,0 +1,60 @@
+﻿@page "{id}"
+@model DetailsModel
+@section breadcrumb{
+    <a class="breadcrumb-item" asp-page="/Index">Config</a>
+    <a class="breadcrumb-item" asp-page="Index">Locations</a>
+    <a class="breadcrumb-item" asp-page="Details" asp-route-id="@Model.Location.Id">@Model.Location.Name</a>
+}
+    @if (User.IsAdmin())
+{
+    @section actionbar {
+    <a asp-page="Edit" asp-route-id="@Model.Location.Id" class="btn btn-primary"><i class="fa fa-edit"></i> Edit..</a>
+    <a asp-page="Add" class="btn btn-outline-info"><i class="fa fa-plus"></i> Add new location..</a>
+    }
+}
+<div class="card">
+    <div class="card-body">
+        <div class="row mb-3">
+            <label class="col-md-3 text-muted">Name</label>
+            <div class="col-md-9">@Model.Location.Name</div>
+        </div>
+        @if (Model.Location.ParentId.HasValue)
+        {
+            <div class="row mb-3">
+                <label class="col-md-3 text-muted">Parent location</label>
+                <div class="col-md-9"><a asp-route-id="@Model.Location.ParentId">@Model.Location.Parent.Name</a></div>
+            </div>
+        }
+    </div>
+    <div class="card-footer text-start small">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="text-muted">Created by</div>
+                <div>@Model.Location.Creator.Name</div>
+            </div>
+            <div class="col-md-3">
+                <div class="text-muted">Creation date</div>
+                <div>@Model.Location.CreationDate.ToLongDateTime()</div>
+            </div>
+        </div>
+    </div>
+</div>
+@if (Model.Location.InverseParent.Any())
+{
+    <h4>@("Place".ToQuantity(Model.Location.InverseParent.Count))</h4>
+    <table class="table table-striped table-sm table-hover border-bottom">
+        <thead>
+            <tr>
+                <th>Name</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Location.InverseParent.OrderBy(c => c.Name))
+            {
+                <tr>
+                    <td><a asp-page="./Details" asp-route-id="@item.Id">@item.Name</a></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

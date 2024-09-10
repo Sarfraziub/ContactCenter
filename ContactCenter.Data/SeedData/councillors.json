@@ -1,0 +1,72 @@
+[
+  {
+    "Id": "0e42e8b1-fabc-4d70-9b6f-fd62f0f6d724",
+    "Name": "John James",
+    "ContactNumber": "0712224849",
+    "Ward": "1",
+    "Image": ""
+  },
+  {
+    "Id": "3e4b9a47-9c34-4180-97d7-d5ebd747709e",
+    "Name": "Alice Smith",
+    "ContactNumber": "0823344556",
+    "Ward": "2",
+    "Image": ""
+  },
+  {
+    "Id": "7a4e5c9b-8d5b-4f18-bd8c-efbfadf72633",
+    "Name": "Michael Brown",
+    "ContactNumber": "0735566778",
+    "Ward": "3",
+    "Image": ""
+  },
+  {
+    "Id": "adf1e5c2-d56c-40f2-a8e3-45fbf8af69c2",
+    "Name": "Emily Johnson",
+    "ContactNumber": "0746677889",
+    "Ward": "4",
+    "Image": ""
+  },
+  {
+    "Id": "cf4f6a18-8e7c-4f33-9e71-5fe8dbcd798c",
+    "Name": "David Wilson",
+    "ContactNumber": "0719988776",
+    "Ward": "5",
+    "Image": ""
+  },
+  {
+    "Id": "fd123451-b5fb-4cfa-a33f-f51a9fbc5409",
+    "Name": "Jessica Lee",
+    "ContactNumber": "0798765432",
+    "Ward": "6",
+    "Image": ""
+  },
+  {
+    "Id": "218fed19-e7f2-4c91-bd59-726d6edc748f",
+    "Name": "Thomas Miller",
+    "ContactNumber": "0721234567",
+    "Ward": "7",
+    "Image": ""
+  },
+  {
+    "Id": "50c4f8a4-896d-441d-8a1a-11bbf734d8b7",
+    "Name": "Sarah Davis",
+    "ContactNumber": "0812345678",
+    "Ward": "8",
+    "Image": ""
+  },
+  {
+    "Id": "7469ab4d-b45b-42fa-982d-e11a68e6a38a",
+    "Name": "Daniel Taylor",
+    "ContactNumber": "0789876543",
+    "Ward": "9",
+    "Image": ""
+  },
+  {
+    "Id": "89a1c6b2-0d8f-4c8b-85d7-d7b36afcf50e",
+    "Name": "Samantha Moore",
+    "ContactNumber": "0765432198",
+    "Ward": "10",
+    "Image": ""
+  }
+]

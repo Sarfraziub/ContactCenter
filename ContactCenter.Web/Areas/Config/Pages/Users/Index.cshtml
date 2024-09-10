@@ -1,0 +1,45 @@
+﻿@page
+@model IndexModel
+@section actionbar {
+    <a asp-page="Add" class="btn btn-primary"><i class="fa fa-user-plus"></i> Add new user</a>
+}
+    @section breadcrumb {
+    <a class="breadcrumb-item" asp-page="/Index">Config</a>
+    <a class="breadcrumb-item" asp-page="Index">Users</a>
+}
+    @if (Model.QueryString != null)
+{
+    <p class="text-info"><i class="fa fa-search text-light"></i> You searched for "<strong class="text-white">@Model.QueryString</strong>" <a class="btn btn-sm btn-outline-secondary" asp-route-q=""><i class="fa fa-close"></i> Clear search</a> </p>
+}
+<h4 class="font-weight-light">@("User".ToQuantity(Model.List.TotalItemCount)) @(Model.QueryString != null ? "found" : "")</h4>
+@if (Model.List.PageCount > 1)
+{
+    <div class="text-muted mb-3 font-weight-light">Page <strong>@Model.List.PageNumber</strong> of <strong>@Model.List.PageCount</strong></div>
+}
+<table class="table table-striped border-bottom table-hover">
+    <thead>
+        <tr>
+            <th>User name</th>
+            <th>Role</th>
+            <th>Last login date</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model.List)
+        {
+            <tr>
+                <td>
+                    <div>
+                        <div style="width: 48px; height: 48px;" class="font-weight-bold float-start me-2 p-2 border border-secondary rounded-circle bg-white text-center align-middle">@user.Initials</div>
+                        <div>
+                            <div>@user.Name</div>
+                            <div class="text-muted small"><a asp-page="./Details" asp-route-id="@user.Id">@user.LoginId</a></div>
+                        </div>
+                    </div>
+                </td>
+                <td>@user.Role.ToEnumString()</td>
+                <td>@user.LastLoginDate</td>
+            </tr>
+        }
+    </tbody>
+</table>

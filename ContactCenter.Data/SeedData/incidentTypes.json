@@ -1,0 +1,18 @@
+[
+  {
+    "Id": 1,
+    "TypeName": "Fire & Disaster"
+  },
+  {
+    "Id": 2,
+    "TypeName": "Water"
+  },
+  {
+    "Id":3,
+    "TypeName": "Fraud & Corruption"
+  },
+  {
+    "Id": 4,
+    "TypeName": "Other"
+  }
+]

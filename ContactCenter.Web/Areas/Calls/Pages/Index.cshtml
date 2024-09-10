@@ -1,0 +1,35 @@
+﻿@page "{id?}"
+@model IndexModel
+@section breadcrumb{
+    <a class="breadcrumb-item" asp-page="/Index">Calls</a>
+}
+
+@if (User.IsAgent() && User.IsOnline())
+{
+    @section actionbar{
+    <a asp-page="/Add" class="btn btn-success"><i class="fa-solid fa-phone"></i> New call</a>
+}
+}
+<table class="table table-sm table-hover table-striped">
+    <thead>
+        <tr>
+            <th>Contact</th>
+            <th>Agent</th>
+            <th>Extension</th>
+            <th>Time</th>
+            <th>Duration</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.List)
+        {
+            <tr>
+                <td><a asp-page="./Details" asp-route-id="@item.Id">@item.ToCallerId()</a></td>
+                <td>@item.Agent.Status.ToHtml(false) @item.Agent.Creator.Name</td>
+                <td>@item.Agent.Extension</td>
+                <td>@item.StartTime.ToLongDateTime()</td>
+                <td>@item.Duration?.ToString(@"mm\:ss")</td>
+            </tr>
+        }
+    </tbody>
+</table>

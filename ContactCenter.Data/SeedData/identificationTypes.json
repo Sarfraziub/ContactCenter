@@ -1,0 +1,10 @@
+[
+  {
+    "Id": 1,
+    "IdentificationDocument": "SA ID"
+  },
+  {
+    "Id": 2,
+    "IdentificationDocument": "Passport"
+  }
+]

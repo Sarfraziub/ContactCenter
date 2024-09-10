@@ -1,0 +1,74 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<Nullable>disable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<UserSecretsId>f4648274-e2bf-44e5-a695-6f1a9b08d9bc</UserSecretsId>
+		<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <Compile Remove="NewFolder\**" />
+	  <Compile Remove="wwwroot\NewFolder\**" />
+	  <Content Remove="NewFolder\**" />
+	  <Content Remove="wwwroot\NewFolder\**" />
+	  <EmbeddedResource Remove="NewFolder\**" />
+	  <EmbeddedResource Remove="wwwroot\NewFolder\**" />
+	  <None Remove="NewFolder\**" />
+	  <None Remove="wwwroot\NewFolder\**" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Content Include="SSL\ccenter.ks">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	</ItemGroup>
+	<ItemGroup>
+		<None Update="SSL\ccenter.ks">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="CloudinaryDotNet" Version="1.26.2" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.7" />
+		<PackageReference Include="SendGrid" Version="9.29.3" />
+		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+		<PackageReference Include="EPPlus" Version="6.0.6" />
+		<PackageReference Include="Humanizer.Core" Version="2.14.1" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="6.0.8" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.8">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.15.1" />
+		<PackageReference Include="OpenIddict.AspNetCore" Version="3.1.1" />
+		<PackageReference Include="OpenIddict.EntityFrameworkCore" Version="3.1.1" />
+		<PackageReference Include="wCyber.Helpers.Web" Version="1.0.5" />
+		<PackageReference Include="wCyber.Lib.FileStorage" Version="1.0.2" />
+		<PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="6.0.5" />
+		<PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="6.0.5" />
+		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.15.1" />
+		<PackageReference Include="wCyber.Helpers.Web" Version="1.0.5" />
+		<PackageReference Include="wCyber.Lib.FileStorage" Version="1.0.2" />
+		<PackageReference Include="X.PagedList" Version="8.4.3" />
+		<PackageReference Include="X.PagedList.Mvc.Core" Version="8.4.3" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\ContactCenter.Data\ContactCenter.Data.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Include="Areas\Config\Pages\CallCategories\Add.cshtml" />
+	  <None Include="Areas\Config\Pages\CallCategories\Details.cshtml" />
+	  <None Include="Areas\Config\Pages\CallCategories\Edit.cshtml" />
+	  <None Include="Areas\Config\Pages\CallCategories\Index.cshtml" />
+	  <None Include="Areas\Config\Pages\TicketCategories\Add.cshtml" />
+	  <None Include="Areas\Config\Pages\TicketCategories\Details.cshtml" />
+	  <None Include="Areas\Config\Pages\TicketCategories\Edit.cshtml" />
+	  <None Include="Areas\Config\Pages\TicketCategories\Index.cshtml" />
+	</ItemGroup>
+
+</Project>

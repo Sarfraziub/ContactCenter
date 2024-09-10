@@ -1,0 +1,6 @@
+﻿@page
+@model DetailsModel
+@section breadcrumb{
+    <a class="breadcrumb-item" asp-page="/Index">Tickets</a>
+    <a class="breadcrumb-item" asp-page="." asp-route-id="@Model.Ticket.Number">@Model.Ticket.Number</a>
+}

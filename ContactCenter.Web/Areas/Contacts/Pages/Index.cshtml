@@ -1,0 +1,29 @@
+﻿@page
+@model IndexModel
+@section breadcrumb{
+    <a class="breadcrumb-item" asp-page="/Index">Contacts</a>
+}
+@section actionbar{
+    <a asp-page="./Add" class="btn btn-success"><i class="fa fa-plus"></i> Add new contact..</a>
+}
+    <table class="table table-sm table-hover table-striped">
+        <thead>
+            <tr>
+                <th>Number</th>
+                <th>Name</th>
+                <th>Location</th>
+                <th>Creation date</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.List)
+        {
+            <tr>
+                <td><a asp-page="./Details" asp-route-id="@item.Id">@item.Id</a></td>
+                <td><i class="fa fa-address-card text-black-50"></i> @item.Name</td>
+                <td>@item.Location?.Name</td>
+                <td>@item.CreationDate.ToLongDateTime()</td>
+            </tr>
+        }
+    </tbody>
+</table>

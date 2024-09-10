@@ -1,0 +1,35 @@
+﻿@page
+@model AddModel
+@section breadcrumb{
+    <a class="breadcrumb-item" asp-page="/Index">Config</a>
+    <a class="breadcrumb-item" asp-page="Index">Call categories</a>
+    <a class="breadcrumb-item" asp-page="Add">Add</a>
+}
+    <form method="post">
+        <div class="card">
+            <div class="card-body">
+                <div class="row mb-3">
+                    <label class="col-md-3">Name<i class="text-danger">*</i></label>
+                    <div class="col-md-9">
+                        <input asp-for="Category.Name" maxlength="256" required class="form-control" />
+                        <span asp-validation-for="Category.Name" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label class="col-md-3">Parent category</label>
+                    <div class="col-md-9">
+                        <select asp-for="Category.ParentId" class="form-control select2" asp-items="Model.Parents">
+                            <option value="">Select..</option>
+                        </select>
+                        <span asp-validation-for="Category.ParentId" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <button class="btn btn-success"><i class="fa fa-save"></i> Save</button>
+            </div>
+        </div>
+    </form>
+    @section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    }

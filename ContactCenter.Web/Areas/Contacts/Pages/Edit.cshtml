@@ -1,0 +1,60 @@
+﻿@page "{id}"
+@model EditModel
+@section breadcrumb{
+    <a class="breadcrumb-item" asp-page="/Index">Contacts</a>
+    <a class="breadcrumb-item" asp-page="Details" asp-route-id="@Model.Contact.Id">@Model.Contact.Id</a>
+    <a class="breadcrumb-item" asp-page="." asp-route-id="@Model.Contact.Id">Edit</a>
+}
+    <form method="post">
+        <div class="card">
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-md-3 text-muted">Contact number<i class="text-danger">*</i></div>
+                    <div class="col-md-4">
+                        <input asp-for="Contact.Id" class="form-control" readonly type="number" />
+                        <span asp-validation-for="Contact.Id" class="text-danger small"></span>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-3 text-muted">Full name<i class="text-danger">*</i></div>
+                    <div class="col-md-9">
+                        <input asp-for="Contact.Name" class="form-control" required />
+                        <span asp-validation-for="Contact.Name" class="text-danger small"></span>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-3 text-muted">Email</div>
+                    <div class="col-md-9">
+                        <input asp-for="Contact.Email" class="form-control" type="email" />
+                        <span asp-validation-for="Contact.Email" class="text-danger small"></span>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-3 text-muted">Company</div>
+                    <div class="col-md-9">
+                        <input asp-for="Contact.Company" class="form-control" />
+                        <span asp-validation-for="Contact.Company" class="text-danger small"></span>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-3 text-muted">Address<i class="text-danger">*</i></div>
+                    <div class="col-md-9">
+                        <textarea asp-for="Contact.Address" class="form-control" required></textarea>
+                        <span asp-validation-for="Contact.Address" class="text-danger small"></span>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-3 text-muted">Location<i class="text-danger">*</i></div>
+                    <div class="col-md-9">
+                        <select asp-for="Contact.LocationId" asp-items="Model.Locations" class="form-control select2" required>
+                            <option value="">Select..</option>
+                        </select>
+                        <span asp-validation-for="Contact.LocationId" class="text-danger small"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <button class="btn btn-primary"><i class="fa fa-save"></i> Save</button>
+            </div>
+        </div>
+    </form>

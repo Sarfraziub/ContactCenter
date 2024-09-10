@@ -1,0 +1,18 @@
+[
+  {
+    "Id": 0,
+    "StatusName": "PENDING"
+  },
+  {
+    "Id": 1,
+    "StatusName": "IN_PROGRESS"
+  },
+  {
+    "Id": 2,
+    "StatusName": "RESOLVED"
+  },
+  {
+    "Id":3,
+    "StatusName": "CANCELLED"
+  }
+]

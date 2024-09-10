@@ -1,0 +1,1 @@
+Scaffold-dbcontext "Host=localhost;Database=EDRSM;Username=postgres;Password=admin" Npgsql.EntityFrameworkCore.PostgreSQL -namespace "ContactCenter.Data" -outputdir "Entities" -force

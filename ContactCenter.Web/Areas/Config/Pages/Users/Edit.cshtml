@@ -1,0 +1,13 @@
+﻿@page "{id:Guid}"
+@model EditModel
+@section breadcrumb {
+    <a class="breadcrumb-item" href="#">Config</a>
+    <a class="breadcrumb-item" asp-page="Index" asp-route-id="">Users</a>
+    <a class="breadcrumb-item" asp-page="Details" asp-route-id="@Model.SelectedUser.Id">@Model.SelectedUser.LoginId</a>
+}
+    <form method="post">
+        <partial name="Edit.Partial" model="Model.SelectedUser" />
+    </form>
+    @section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

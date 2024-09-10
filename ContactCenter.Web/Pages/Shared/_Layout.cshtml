@@ -1,0 +1,116 @@
+﻿@{
+    var area = ViewContext.RouteData.Values["area"]?.ToString().ToLower();
+    var hasSideNav = ViewBag.SideNavPath != null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Contact Center</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/lib/select2/css/select2.min.css" asp-append-version="true" />
+    <link href="~/lib/font-awesome/css/all.min.css" rel="stylesheet" asp-append-version="true" />
+    <link href="~/lib/jquery-ui/themes/base/jquery-ui.min.css" rel="stylesheet" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/lib/select2/css/select2.min.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/lib/select2-bootstrap/select2-bootstrap-5-theme.min.css" asp-append-version="true" />
+    @RenderSection(name: "styles", required: false)
+    <link rel="stylesheet" href="~/ContactCenter.Web.styles.css" asp-append-version="true" />
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow">
+            <div class="container-fluid">
+                <a class="navbar-brand" asp-area="" asp-page="/Index">Contact Center</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex">
+                    <partial name="__Nav" />
+                </div>
+                <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
+                    <partial name="_LoginPartial" />
+                    @if (User.IsAdmin())
+                    {
+                        <div class="navbar-nav">
+                            <div class="nav-item @(area == "config" ? "active" : "")"><a class="nav-link" asp-area="Config" asp-page="/Index"><i class="fa fa-cog text-primary"></i> Config</a></div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </nav>
+
+    </header>
+    <div class="container@(hasSideNav?"-fluid":"")">
+        <main role="main" class="pb-3 @(hasSideNav?"row":"")">
+            @if (hasSideNav)
+            {
+                <div class="col-md-3 col-lg-2 sidenav">
+                    <partial name="@ViewBag.SideNavPath" />
+                </div>
+            }
+            <div class="@(hasSideNav?"col-md-9 col-lg-10":"")">
+                @if (IsSectionDefined("breadcrumb") || IsSectionDefined("actionbar"))
+                {
+                    <div class="navbar navbar-expand-lg px-0 navbar-dark d-print-none">
+                        @if (IsSectionDefined("breadcrumb"))
+                        {
+                            <div class="breadcrumb px-0 py-2 m-0 small" style="background: none !important">@RenderSection("breadcrumb", false)</div>
+                        }
+                        @if (IsSectionDefined("actionbar"))
+                        {
+                            <div class="ms-auto">@RenderSection("actionbar", required: false)</div>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <div class="m-2"></div>
+                }
+                @if (@ViewData["PageTitle"] != null)
+                {
+                    <h3>@ViewData["PageTitle"]</h3>
+                }
+                @if (@ViewData["PageSubTitle"] != null)
+                {
+                    <h4 class="fw-light">@ViewData["PageSubTitle"]</h4>
+                }
+                @RenderBody()
+            </div>
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2022 - wCyber Contact Center
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="~/lib/jquery-ui/jquery-ui.min.js" asp-append-version="true"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="~/lib/font-awesome/js/all.min.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="~/lib/select2/js/select2.full.min.js" asp-append-version="true"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/lib/knockout/knockout-latest.min.js" asp-append-version="true"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $(".datepicker").datepicker({ dateFormat: "yy-mm-dd" });
+            $(".datepicker-later").datepicker({ dateFormat: "yy-mm-dd", minDate: 0 });
+            $(".datepicker-before").datepicker({ dateFormat: "yy-mm-dd", maxDate: 0 });
+            $.fn.select2.defaults.set("theme", "bootstrap-5");
+            $(".select2").select2({
+            });
+            $('#sidebarCollapse').on('click', function() {
+                if (!$('#sidebar').hasClass('sidebar-transition')) $('#sidebar').addClass('sidebar-transition');
+                $('#sidebar').toggleClass('active');
+                $(this).toggleClass('active');
+                sessionStorage.setItem("sidebarCollapse", $('#sidebar').hasClass('active'));
+            });
+        })
+    </script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
