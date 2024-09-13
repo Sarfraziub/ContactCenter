@@ -39,7 +39,7 @@
                     }
                 </td>
 
-                <td class="small">@item.Assignee.LoginId</td>
+                <td class="small">@item.Assignee?.LoginId</td>
                 <td>@item.CreationDate.ToShortDate() </td>
                 <td>
                     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#incidentModal-@item.Id">
@@ -90,7 +90,7 @@
                             <div class="form-group row">
                                 <label for="assignedTo" class="col-sm-2 col-form-label">Assigned to:</label>
                                 <div class="col-sm-4">
-                                    <p id="assignedTo">@item.Assignee.LoginId</p>
+                                    <p id="assignedTo">@item.Assignee?.LoginId</p>
                                 </div>
                                 <label for="creationDate" class="col-sm-2 col-form-label">Creation Date:</label>
                                 <div class="col-sm-4">
