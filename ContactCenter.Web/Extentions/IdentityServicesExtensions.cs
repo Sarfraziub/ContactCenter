@@ -1,5 +1,5 @@
 ﻿using ContactCenter.Data;
-using ContactCenter.Data.Identity;
+using ContactCenter.Data.Entities;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;

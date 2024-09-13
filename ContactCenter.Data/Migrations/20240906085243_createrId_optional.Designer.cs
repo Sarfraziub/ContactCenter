@@ -11,7 +11,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace ContactCenter.Data.Migrations
 {
-    [DbContext(typeof(EDRSMContext))]
+    [DbContext(typeof(CCDbContext))]
     [Migration("20240906085243_createrId_optional")]
     partial class createrId_optional
     {

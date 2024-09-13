@@ -10,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace ContactCenter.Data.Migrations
 {
-    [DbContext(typeof(EDRSMContext))]
+    [DbContext(typeof(CCDbContext))]
     partial class EDRSMContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

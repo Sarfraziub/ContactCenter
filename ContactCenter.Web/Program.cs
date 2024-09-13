@@ -1,25 +1,20 @@
 using ContactCenter.Data;
 using ContactCenter.Web;
-using ContactCenter.Lib;
 using Microsoft.AspNetCore.Identity;
-using wCyber.Helpers.Identity.Auth;
 using Microsoft.EntityFrameworkCore;
 using EDRSM.API.Extentions;
-using ContactCenter.Data.Identity;
 using ContactCenter.Data.SeedDataMethods;
 using EDRSM.API.Middleware;
-using ContactCenter.Web.Implementation;
-using ContactCenter.Web.Interfaces;
+using ContactCenter.Data.Entities;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddApplicationServices(builder.Configuration);
 builder.Services.AddIdentityServices(builder.Configuration);
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-builder.Services.AddDbContext<EDRSMContext>(options => options.UseNpgsql(connectionString));
+builder.Services.AddDbContext<CCDbContext>(options => options.UseNpgsql(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddScoped<ITicketRepository, TicketRepository>(); // Assuming 'TicketRepository' is your concrete implementation
 
 //Configure auth
 builder.ConfigureAuth();
@@ -59,15 +54,15 @@ app.MapRazorPages();
 //app.MapControllers();
 using var scope = app.Services.CreateScope();
 var services = scope.ServiceProvider;
-var edrsmContext = services.GetRequiredService<EDRSMContext>();
-var identityContext = services.GetRequiredService<EdrsmIdentityDbContext>();
+var edrsmContext = services.GetRequiredService<CCDbContext>();
+//var identityContext = services.GetRequiredService<EdrsmIdentityDbContext>();
 var userManager = services.GetRequiredService<UserManager<ContactUser>>();
 var logger = services.GetRequiredService<ILogger<Program>>();
 try
 {
     //await edrsmContext.Database.MigrateAsync();
     //await identityContext.Database.MigrateAsync();
-    await EdrsmContextSeed.SeedAsync(edrsmContext);
+    await CCDbContextSeed.SeedAsync(edrsmContext);
     await EdrsmAppUserSeed.SeedUsersAsync(userManager);
 }
 catch (Exception ex)

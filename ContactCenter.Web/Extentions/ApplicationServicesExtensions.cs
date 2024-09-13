@@ -1,8 +1,6 @@
 ﻿using ContactCenter.Data;
 using EDRSM.API.Errors;
 using EDRSM.API.Helpers;
-using EDRSM.API.Implementation;
-using EDRSM.API.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -18,17 +16,13 @@ namespace EDRSM.API.Extentions
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
             var connectionString = config.GetConnectionString("DefaultConnection");
-            services.AddDbContext<EDRSMContext>(options => options.UseNpgsql(connectionString));
+            services.AddDbContext<CCDbContext>(options => options.UseNpgsql(connectionString));
 
-            services.AddScoped<ITokenService, TokenService>();
-            services.AddScoped<IUserOperationsRepository, UserOperationsRepository>();
-            services.AddScoped<IReportingRepository, ReportingRepository>();
-            services.AddScoped<ICouncillorsRepository, CouncillorsRepository>();
-            services.AddScoped<IFaqRepository, FaqRepository>();
-            services.AddScoped<IDashboardStatsRepository, DashboardStatsRepository>();
-            services.AddScoped<IRequestedPaymentPlanRepository, RequestedPaymentPlanRepository>();
-            services.AddScoped<IEmailSender, EmailSender>();
-            services.AddScoped<IPhotoService, PhotoService>();
+            //services.AddScoped<ITokenService, TokenService>();
+            //services.AddScoped<IReportingRepository, ReportingRepository>();
+            //services.AddScoped<IDashboardStatsRepository, DashboardStatsRepository>();
+            //services.AddScoped<IEmailSender, EmailSender>();
+            //services.AddScoped<IPhotoService, PhotoService>();
 
             services.Configure<CloudinarySettings>(config.GetSection("CloudinarySettings"));
 

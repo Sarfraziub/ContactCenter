@@ -1,31 +1,28 @@
 ﻿using ContactCenter.Data;
-using ContactCenter.Data.Identity;
+using ContactCenter.Data.Entities;
+using ContactCenter.Web.API;
 using EDRSM.API.DTOs;
-using EDRSM.API.Implementation;
-using EDRSM.API.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace EDRSM.API.Controllers
 {
-    public class FaqsController : BaseApiController
+    public class FaqsController : SysAPIController
     {
-        private readonly IFaqRepository _faqRepository;
         private readonly UserManager<ContactUser> _userManager;
 
         public FaqsController(
-            UserManager<ContactUser> userManager,
-            IFaqRepository faqRepository
+            UserManager<ContactUser> userManager
             )
         {
             _userManager = userManager;
-            _faqRepository = faqRepository;
         }
 
         [HttpGet]
         public async Task<ActionResult<IReadOnlyList<Faq>>> GetFaqs()
         {
-            var faqs = await _faqRepository.GetAllAsync();
+            var faqs = await Db.Faqs.ToListAsync();
             return Ok(faqs);
         }
 
@@ -37,7 +34,7 @@ namespace EDRSM.API.Controllers
                 return BadRequest("Invalid ID format.");
             }
 
-            var faq = await _faqRepository.GetByIdAsync(guidId);
+            var faq = await Db.Faqs.FindAsync(id);
             if (faq == null)
             {
                 return NotFound();
@@ -58,7 +55,8 @@ namespace EDRSM.API.Controllers
                 Answer = faqDto.Answer
             };
 
-            var createdFaq = await _faqRepository.AddAsync(faq);
+            await Db.Faqs.AddAsync(faq);
+            var createdFaq = await Db.SaveChangesAsync();
             return CreatedAtAction(nameof(GetFaq), new { id = faq.Id }, faq);
         }
 
@@ -75,14 +73,22 @@ namespace EDRSM.API.Controllers
                 return BadRequest("ID mismatch.");
             }
 
-            var updated = await _faqRepository.UpdateAsync(faq);
-            if (!updated)
+            var existingFaq = await Db.Faqs.FindAsync(faq.Id);
+            if (existingFaq == null)
             {
                 return NotFound();
             }
 
+            existingFaq.Category = faq.Category;
+            existingFaq.ByCategorySorter = faq.ByCategorySorter;
+            existingFaq.Question = faq.Question;
+            existingFaq.Answer = faq.Answer;
+
+            await Db.SaveChangesAsync();
+
             return NoContent();
         }
+
 
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteFaq(string id)
@@ -92,20 +98,26 @@ namespace EDRSM.API.Controllers
                 return BadRequest("Invalid ID format.");
             }
 
-            var deleted = await _faqRepository.DeleteAsync(guid);
-            if (!deleted)
+            var faq = await Db.Faqs.FindAsync(guid);
+            if (faq == null)
             {
                 return NotFound();
             }
 
+            Db.Faqs.Remove(faq);
+
+            await Db.SaveChangesAsync();
+
             return NoContent();
         }
-
 
         [HttpGet("categories")]
         public async Task<ActionResult<IReadOnlyList<string>>> GetUniqueCategories()
         {
-            var categories = await _faqRepository.GetUniqueCategoriesAsync();
+            var categories = await Db.Faqs
+                .Select(f => f.Category)
+                .Distinct()
+                .ToListAsync();
             return Ok(categories);
         }
     }

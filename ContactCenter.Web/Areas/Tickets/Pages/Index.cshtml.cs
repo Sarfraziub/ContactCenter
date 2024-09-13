@@ -1,12 +1,12 @@
 using ContactCenter.Data;
-using ContactCenter.Data.Identity;
+using ContactCenter.Data.Entities;
 using ContactCenter.Lib;
 
 //using ContactCenter.Lib;
 using ContactCenter.Web.DTOs;
 using ContactCenter.Web.Pages;
 using EDRSM.API.DTOs;
-using EDRSM.API.Interfaces;
+using EDRSM.API.Helpers;
 using Humanizer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -18,14 +18,12 @@ namespace ContactCenter.Web.Areas.Tickets.Pages
 {
     public class IndexModel : SysListPageModel<Ticket>
     {
-        private readonly IReportingRepository _reportingRepo;
-        private readonly EDRSMContext _context; // Database context
+        private readonly CCDbContext _context; // Database context
 
         public List<ContactUser> ContactUser { get; set; }
 
-        public IndexModel(IReportingRepository reportingRepo, EDRSMContext context)
+        public IndexModel(CCDbContext context)
         {
-            _reportingRepo = reportingRepo;
             _context = context;
         }
 
@@ -92,11 +90,29 @@ namespace ContactCenter.Web.Areas.Tickets.Pages
                     UpdatedBy = user.LoginId
 
                 };
-                var incidentAudit = await _reportingRepo.SubmitIncidentAuditAsync(incidentAuditDto);
+                var incidentAudit = await submitIncidentAudit(incidentAuditDto);
                 incident.StatusId = model.StatusId;
                 _context.SaveChanges();
             }
             return new JsonResult("my result");
+        }
+        private async Task<TicketAudit> submitIncidentAudit(SubmitIncidentAuditDto submitIncidentAuditDto)
+        {
+            var incidentAudit = new TicketAudit
+            {
+                TicketId = submitIncidentAuditDto.TicketId,
+                StatusId = submitIncidentAuditDto.StatusId,
+                StatusName = submitIncidentAuditDto.StatusName,
+                StatusChangeTime = DateTime.Now,
+                UserId = submitIncidentAuditDto.UserId,
+                //ShortSummary = submitIncidentAuditDto.ShortSummary,
+                Description = submitIncidentAuditDto.Description,
+                NameOfUpdater = submitIncidentAuditDto.UpdatedBy
+            };
+
+            await Db.TicketAudites.AddAsync(incidentAudit);
+            await Db.SaveChangesAsync();
+            return incidentAudit;
         }
     }
 }

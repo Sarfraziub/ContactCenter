@@ -1,38 +1,54 @@
-﻿using ContactCenter.Data;
+﻿using CloudinaryDotNet;
+using CloudinaryDotNet.Actions;
+using ContactCenter.Data;
 using ContactCenter.Data.Entities;
-using ContactCenter.Data.Identity;
+using ContactCenter.Web.API;
 using EDRSM.API.DTOs;
-using EDRSM.API.Interfaces;
+using EDRSM.API.Helpers;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace EDRSM.API.Controllers
 {
-    public class CouncillorsController : BaseApiController
+    public class CouncillorsController : SysAPIController
     {
         private readonly UserManager<ContactUser> _userManager;
-        private readonly ICouncillorsRepository _councillorsRepository;
-        private readonly IPhotoService _photoService;
-
+        private readonly Cloudinary _cloudinary;
         public CouncillorsController(
-            UserManager<ContactUser> userManager,
-            ICouncillorsRepository councillorsRepository,
-            IPhotoService photoService
-            )
+            UserManager<ContactUser> userManager, IOptions<CloudinarySettings> config)
         {
-            _userManager = userManager;
-            _councillorsRepository = councillorsRepository;
-            _photoService = photoService;
+            _userManager = userManager; 
+            var acc = new Account(config.Value.CloudName, config.Value.ApiKey, config.Value.ApiSecret);
+            _cloudinary = new Cloudinary(acc);
         }
-
 
         [HttpGet]
         public async Task<ActionResult<IReadOnlyList<Councillor>>> GetCouncillors()
         {
-            var councillors = await _councillorsRepository.GetAllCouncillorsAsync();
+            var councillors = await Db.Councillors.ToListAsync();
             return Ok(councillors);
         }
 
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Councillor>> GetCouncillor(Guid id)
+        {
+            var councillor = await Db.Councillors
+                .Where(c => c.Id == id)
+                .FirstOrDefaultAsync();
+
+            if (councillor == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(councillor);
+        }
 
         [HttpPost]
         public async Task<ActionResult<Councillor>> CreateCouncillor([FromForm] CreateCouncillorDto createCouncillorDto)
@@ -42,7 +58,7 @@ namespace EDRSM.API.Controllers
 
             if (createCouncillorDto.Image != null)
             {
-                var result = await _photoService.AddPhotoAsync(createCouncillorDto.Image);
+                var result = await AddPhotoAsync(createCouncillorDto.Image);
 
                 if (result.Error != null) return BadRequest(result.Error.Message);
 
@@ -52,98 +68,97 @@ namespace EDRSM.API.Controllers
 
             var councillor = new Councillor
             {
-                Id = Guid.NewGuid(), 
+                Id = Guid.NewGuid(),
                 Name = createCouncillorDto.Name,
                 ContactNumber = createCouncillorDto.ContactNumber,
                 Ward = createCouncillorDto.Ward,
-                Image = imageUrl, 
-                CloudinaryPublicId = cloudinaryPublicId 
+                Image = imageUrl,
+                CloudinaryPublicId = cloudinaryPublicId
             };
 
-            var createdCouncillor = await _councillorsRepository.AddCouncillorAsync(councillor);
+            Db.Councillors.Add(councillor);
+            await Db.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetCouncillor), new { id = createdCouncillor.Id }, createdCouncillor);
+            return CreatedAtAction(nameof(GetCouncillor), new { id = councillor.Id }, councillor);
         }
-
-
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Councillor>> GetCouncillor(string id)
-        {
-            if (!Guid.TryParse(id, out var guid))
-            {
-                return BadRequest("Invalid ID format.");
-            }
-
-            var councillor = await _councillorsRepository.GetCouncillorByIdAsync(guid);
-            if (councillor == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(councillor);
-        }
-
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateCouncillor(string id, [FromForm] CreateCouncillorDto updateCouncillorDto)
+        public async Task<IActionResult> UpdateCouncillor(Guid id, [FromForm] CreateCouncillorDto updateCouncillorDto)
         {
-            if (!Guid.TryParse(id, out var guid))
-            {
-                return BadRequest("Invalid ID format.");
-            }
-
-            var councillor = await _councillorsRepository.GetCouncillorByIdAsync(guid);
+            var councillor = await Db.Councillors.FindAsync(id);
             if (councillor == null)
             {
                 return NotFound();
             }
 
-            // Update fields
             councillor.Name = updateCouncillorDto.Name;
             councillor.ContactNumber = updateCouncillorDto.ContactNumber;
             councillor.Ward = updateCouncillorDto.Ward;
 
-            // If a new image is provided, upload it and update the Image property
             if (updateCouncillorDto.Image != null)
             {
-
-                if (!string.IsNullOrWhiteSpace(updateCouncillorDto.CloudinaryPublicId))
+                if (!string.IsNullOrWhiteSpace(councillor.CloudinaryPublicId))
                 {
-                    await _photoService.DeletePhotoAsync(updateCouncillorDto.CloudinaryPublicId);
+                    await DeletePhotoAsync(councillor.CloudinaryPublicId);
                 }
 
-                var result = await _photoService.AddPhotoAsync(updateCouncillorDto.Image);
+                var result = await AddPhotoAsync(updateCouncillorDto.Image);
                 if (result.Error != null) return BadRequest(result.Error.Message);
 
-                councillor.Image = result.SecureUrl.AbsoluteUri; // Update the image URL
+                councillor.Image = result.SecureUrl.AbsoluteUri;
                 councillor.CloudinaryPublicId = result.PublicId;
             }
 
-            var updated = await _councillorsRepository.UpdateCouncillorAsync(councillor);
-            if (!updated)
-            {
-                return NotFound();
-            }
+            Db.Councillors.Update(councillor);
+            await Db.SaveChangesAsync();
 
             return NoContent();
         }
 
-
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteCouncillor(string id)
+        public async Task<IActionResult> DeleteCouncillor(Guid id)
         {
-            if (!Guid.TryParse(id, out var guid))
-            {
-                return BadRequest("Invalid ID format.");
-            }
-
-            var deleted = await _councillorsRepository.DeleteCouncillorAsync(guid);
-            if (!deleted)
+            var councillor = await Db.Councillors.FindAsync(id);
+            if (councillor == null)
             {
                 return NotFound();
             }
 
+            if (!string.IsNullOrWhiteSpace(councillor.CloudinaryPublicId))
+            {
+                await DeletePhotoAsync(councillor.CloudinaryPublicId);
+            }
+
+            Db.Councillors.Remove(councillor);
+            await Db.SaveChangesAsync();
+
             return NoContent();
+        }
+        private async Task<ImageUploadResult> AddPhotoAsync(IFormFile file)
+        {
+            var uploadResult = new ImageUploadResult();
+
+            if (file.Length > 0)
+            {
+                using var stream = file.OpenReadStream();
+                var uploadParams = new ImageUploadParams
+                {
+                    File = new FileDescription(file.FileName, stream),
+                    Transformation = new Transformation()
+                        .Height(500).Width(500).Crop("fill").Gravity("face"),
+                    Folder = "da-net8"
+                };
+
+                uploadResult = await _cloudinary.UploadAsync(uploadParams);
+            }
+
+            return uploadResult;
+        }
+        private async Task<DeletionResult> DeletePhotoAsync(string publicId)
+        {
+            var deleteParams = new DeletionParams(publicId);
+
+            return await _cloudinary.DestroyAsync(deleteParams);
         }
     }
 }

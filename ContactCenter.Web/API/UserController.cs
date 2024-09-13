@@ -1,40 +1,42 @@
-﻿using ContactCenter.Data;
-using ContactCenter.Data.Identity;
+﻿using CloudinaryDotNet;
+using CloudinaryDotNet.Actions;
+using ContactCenter.Data;
+using ContactCenter.Data.Entities;
+using ContactCenter.Web.API;
 using EDRSM.API.DTOs;
 using EDRSM.API.Errors;
-using EDRSM.API.Implementation;
-using EDRSM.API.Interfaces;
+using EDRSM.API.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace EDRSM.API.Controllers
 {
-    public class UserController : BaseApiController
+    public class UserController : SysAPIController
     {
         private readonly UserManager<ContactUser> _userManager;
-        private readonly ITokenService _tokenService;
-        private readonly IUserOperationsRepository _userRepo;
-        private readonly IPhotoService _photoService;
-
+        private readonly Cloudinary _cloudinary;
+        //public PhotoService(IOptions<CloudinarySettings> config)
+        //{
+        //    var acc = new Account(config.Value.CloudName, config.Value.ApiKey, config.Value.ApiSecret);
+        //    _cloudinary = new Cloudinary(acc);
+        //}
         public UserController(
             UserManager<ContactUser> userManager,
-            ITokenService tokenService,
-            IUserOperationsRepository userRepo,
-            IPhotoService photoService
-            )
+            IOptions<CloudinarySettings> config)
         {
+            var acc = new Account(config.Value.CloudName, config.Value.ApiKey, config.Value.ApiSecret);
+            _cloudinary = new Cloudinary(acc);
             _userManager = userManager;
-            _tokenService = tokenService;
-            _userRepo = userRepo;
-            _photoService = photoService;
         }
 
         [HttpGet("countries")]
         public async Task<ActionResult<IReadOnlyList<Country>>> GetCountries()
         {
-            return Ok(await _userRepo.GetCountryDetailsAsync());
+            return Ok(await Db.Countries.ToListAsync());
         }
 
         //[HttpGet("identification-types")]
@@ -77,19 +79,46 @@ namespace EDRSM.API.Controllers
             {
                 if (!string.IsNullOrWhiteSpace(userProfileUpdateDto.CloudinaryPublicId))
                 {
-                    await _photoService.DeletePhotoAsync(userProfileUpdateDto.CloudinaryPublicId);
+                    await DeletePhotoAsync(userProfileUpdateDto.CloudinaryPublicId);
                 }
 
-                var result = await _photoService.AddPhotoAsync(profileImage);
+                var result = await AddPhotoAsync(profileImage);
                 if (result.Error != null) return BadRequest(result.Error.Message);
 
                 //user.ProfileImageUrl = result.SecureUrl.AbsoluteUri; // Update the image URL
                // user.CloudinaryPublicId = result.PublicId;
             }
 
-            await _userRepo.UpdateUserProfile(user);
+            Db.Entry(user).State = EntityState.Modified;
+            await Db.SaveChangesAsync();
 
             return NoContent();
+        }
+        private async Task<DeletionResult> DeletePhotoAsync(string publicId)
+        {
+            var deleteParams = new DeletionParams(publicId);
+
+            return await _cloudinary.DestroyAsync(deleteParams);
+        }
+        private async Task<ImageUploadResult> AddPhotoAsync(IFormFile file)
+        {
+            var uploadResult = new ImageUploadResult();
+
+            if (file.Length > 0)
+            {
+                using var stream = file.OpenReadStream();
+                var uploadParams = new ImageUploadParams
+                {
+                    File = new FileDescription(file.FileName, stream),
+                    Transformation = new Transformation()
+                        .Height(500).Width(500).Crop("fill").Gravity("face"),
+                    Folder = "da-net8"
+                };
+
+                uploadResult = await _cloudinary.UploadAsync(uploadParams);
+            }
+
+            return uploadResult;
         }
     }
 }

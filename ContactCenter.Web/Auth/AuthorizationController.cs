@@ -13,7 +13,7 @@ namespace ContactCenter.Web.Auth
 {
     public class AuthorizationController : Controller
     {
-        private readonly EDRSMContext Db;
+        private readonly CCDbContext Db;
 
         private readonly SignInManager<User> _signInManager;
         private readonly UserManager<User> _userManager;
@@ -21,7 +21,7 @@ namespace ContactCenter.Web.Auth
         public AuthorizationController(
             SignInManager<User> signInManager,
             UserManager<User> userManager,
-            EDRSMContext db)
+            CCDbContext db)
         {
             _signInManager = signInManager;
             _userManager = userManager;
@@ -34,7 +34,8 @@ namespace ContactCenter.Web.Auth
             var request = HttpContext.GetOpenIddictServerRequest();
             if (request.IsPasswordGrantType())
             {
-                var user = await _userManager.FindByNameAsync(request.Username);
+                var user = await _userManager.FindByEmailAsync(request.Username);
+                var usear = await _userManager.FindByNameAsync(request.Username);
                 if (user == null)
                 {
                     var properties = new AuthenticationProperties(new Dictionary<string, string>

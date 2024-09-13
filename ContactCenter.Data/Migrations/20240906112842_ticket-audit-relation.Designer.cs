@@ -11,7 +11,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace ContactCenter.Data.Migrations
 {
-    [DbContext(typeof(EDRSMContext))]
+    [DbContext(typeof(CCDbContext))]
     [Migration("20240906112842_ticket-audit-relation")]
     partial class ticketauditrelation
     {

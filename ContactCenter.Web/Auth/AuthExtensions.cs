@@ -25,7 +25,7 @@ namespace ContactCenter.Web
         public static async Task InitUser(this CookieSigningInContext context)
         {
             var userId = Guid.Parse(context.Principal.FindFirst(ClaimTypes.NameIdentifier).Value);
-            var db = context.HttpContext.RequestServices.GetService<EDRSMContext>();
+            var db = context.HttpContext.RequestServices.GetService<CCDbContext>();
             var user = await db.Users
                 .Include(c => c.Agent)
                 .FirstOrDefaultAsync(c => c.Id == userId);

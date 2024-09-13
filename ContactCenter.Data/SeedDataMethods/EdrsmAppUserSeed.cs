@@ -1,4 +1,4 @@
-﻿using ContactCenter.Data.Identity;
+﻿using ContactCenter.Data.Entities;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;

@@ -20,8 +20,8 @@ namespace ContactCenter.Web
 			});
 
 			builder.Services.AddDefaultIdentity<User>()
-				.AddUserStore<SysUserStore<User, EDRSMContext>>()
-				.AddClaimsPrincipalFactory<SysUserStore<User, EDRSMContext>>()
+				.AddUserStore<SysUserStore<User, CCDbContext>>()
+				.AddClaimsPrincipalFactory<SysUserStore<User, CCDbContext>>()
 				.AddDefaultTokenProviders();
 			builder.Services.ConfigureApplicationCookie(o =>
 			{

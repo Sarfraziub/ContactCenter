@@ -21,14 +21,14 @@ namespace ContactCenter.Web.Pages
         public Guid CurrentUserId => Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
 
         static bool IsDbCreated;
-        EDRSMContext _db;
-        public EDRSMContext Db
+        CCDbContext _db;
+        public CCDbContext Db
         {
             get
             {
                 if (_db == null)
                 {
-                    _db = Request.HttpContext.RequestServices.GetService<EDRSMContext>();
+                    _db = Request.HttpContext.RequestServices.GetService<CCDbContext>();
                     if (!IsDbCreated)
                     {
                         _db.Database.Migrate();

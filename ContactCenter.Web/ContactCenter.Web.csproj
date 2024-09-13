@@ -9,14 +9,26 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <Compile Remove="Implementation\**" />
+	  <Compile Remove="Interfaces\**" />
 	  <Compile Remove="NewFolder\**" />
 	  <Compile Remove="wwwroot\NewFolder\**" />
+	  <Content Remove="Implementation\**" />
+	  <Content Remove="Interfaces\**" />
 	  <Content Remove="NewFolder\**" />
 	  <Content Remove="wwwroot\NewFolder\**" />
+	  <EmbeddedResource Remove="Implementation\**" />
+	  <EmbeddedResource Remove="Interfaces\**" />
 	  <EmbeddedResource Remove="NewFolder\**" />
 	  <EmbeddedResource Remove="wwwroot\NewFolder\**" />
+	  <None Remove="Implementation\**" />
+	  <None Remove="Interfaces\**" />
 	  <None Remove="NewFolder\**" />
 	  <None Remove="wwwroot\NewFolder\**" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Compile Remove="API\AuthController.cs" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -58,6 +70,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\ContactCenter.Data\ContactCenter.Data.csproj" />
+		<ProjectReference Include="..\ContactCenter.Lib\ContactCenter.Lib.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

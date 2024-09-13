@@ -12,10 +12,10 @@ namespace EDRSM.API.Implementation
     public class ReportingRepository : IReportingRepository
     {
 
-        private readonly EDRSMContext _edrsmContext;
+        private readonly CCDbContext _edrsmContext;
 
         public ReportingRepository(
-            EDRSMContext edrsmContext
+            CCDbContext edrsmContext
             )
         {
             _edrsmContext = edrsmContext;

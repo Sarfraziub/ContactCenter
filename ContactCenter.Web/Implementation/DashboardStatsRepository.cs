@@ -9,12 +9,12 @@ namespace EDRSM.API.Implementation
     public class DashboardStatsRepository : IDashboardStatsRepository
     {
         private readonly EdrsmIdentityDbContext _identityContext;
-        private readonly EDRSMContext _edrsmContext;
+        private readonly CCDbContext _edrsmContext;
         private readonly UserManager<ContactUser> _userManager;
 
         public DashboardStatsRepository(
             EdrsmIdentityDbContext identityContext, 
-            EDRSMContext edrsmContext, 
+            CCDbContext edrsmContext, 
             UserManager<ContactUser> userManager
             )
         {

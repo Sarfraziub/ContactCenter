@@ -15,14 +15,14 @@ namespace ContactCenter.Web.API
         public Guid CurrentUserId => Guid.Parse(User.FindFirst(Claims.Subject).Value);
 
         static bool IsDbCreated;
-        EDRSMContext _db;
-        public EDRSMContext Db
+        CCDbContext _db;
+        public CCDbContext Db
         {
             get
             {
                 if (_db == null)
                 {
-                    _db = Request.HttpContext.RequestServices.GetService<EDRSMContext>();
+                    _db = Request.HttpContext.RequestServices.GetService<CCDbContext>();
                     if (!IsDbCreated)
                     {
                         try

@@ -1,32 +1,25 @@
 ﻿using ContactCenter.Data;
-using ContactCenter.Web.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace ContactCenter.Web.API
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class TicketsController : ControllerBase
+    public class TicketsController : SysAPIController
     {
-        private readonly ITicketRepository _ticketRepository;
-
-        public TicketsController(ITicketRepository ticketRepository)
-        {
-            _ticketRepository = ticketRepository;
-        }
 
         [HttpGet]
         public async Task<ActionResult<IReadOnlyList<Ticket>>> GetAll()
         {
-            var tickets = await _ticketRepository.GetAllAsync();
+            var tickets = await Db.Tickets.Include(x => x.TicketAudits).ToListAsync();
             return Ok(tickets);
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<Ticket>> GetById(Guid id)
         {
-            var ticket = await _ticketRepository.GetByIdAsync(id);
+            var ticket = await Db.Tickets.FindAsync(id);
             if (ticket == null)
             {
                 return NotFound();
@@ -37,9 +30,13 @@ namespace ContactCenter.Web.API
         [HttpPost]
         public async Task<ActionResult<Ticket>> Create(Ticket ticket)
         {
-            var createdTicket = await _ticketRepository.AddAsync(ticket);
-            return CreatedAtAction(nameof(GetById), new { id = createdTicket.Id }, createdTicket);
+            Db.Tickets.Add(ticket);
+
+            await Db.SaveChangesAsync();
+
+            return CreatedAtAction(nameof(GetById), new { id = ticket.Id }, ticket);
         }
+
 
         [HttpPut("{id}")]
         public async Task<ActionResult> Update(Guid id, Ticket ticket)
@@ -49,25 +46,43 @@ namespace ContactCenter.Web.API
                 return BadRequest("Ticket ID mismatch");
             }
 
-            var updated = await _ticketRepository.UpdateAsync(ticket);
-            if (!updated)
+            var existingTicket = await Db.Tickets.FindAsync(id);
+            if (existingTicket == null)
             {
                 return NotFound();
             }
 
+            Db.Entry(existingTicket).CurrentValues.SetValues(ticket);
+
+            var updated = await Db.SaveChangesAsync() > 0;
+            if (!updated)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while updating the ticket.");
+            }
+
             return NoContent();
         }
+
 
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(Guid id)
         {
-            var deleted = await _ticketRepository.DeleteAsync(id);
-            if (!deleted)
+            var ticket = await Db.Tickets.FindAsync(id);
+            if (ticket == null)
             {
                 return NotFound();
             }
 
+            Db.Tickets.Remove(ticket);
+
+            var deleted = await Db.SaveChangesAsync() > 0;
+            if (!deleted)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while deleting the ticket.");
+            }
+
             return NoContent();
         }
+
     }
 }

@@ -1,16 +1,16 @@
 ﻿using ContactCenter.Data;
+using ContactCenter.Web.API;
 using EDRSM.API.Errors;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EDRSM.API.Controllers
 {
-    public class BuggyController : BaseApiController
+    public class BuggyController : SysAPIController
     {
-        private readonly EDRSMContext _context;
-        public BuggyController(EDRSMContext context)
+        public BuggyController()
         {
-            _context = context;
+           
         }
 
         [HttpGet("testauth")]

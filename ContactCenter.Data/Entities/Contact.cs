@@ -1,10 +1,10 @@
-using ContactCenter.Data.Identity;
+using ContactCenter.Data.Entities;
 using System;
 using System.Collections.Generic;
 
 namespace ContactCenter.Data
 {
-  public partial class Contact
+    public partial class Contact
   {
     public Contact()
     {

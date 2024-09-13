@@ -1,32 +1,30 @@
-﻿using ContactCenter.Data.Identity;
-using ContactCenter.Data;
+﻿using ContactCenter.Data;
 using EDRSM.API.DTOs;
-using EDRSM.API.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using EDRSM.API.Errors;
 using EDRSM.API.Helpers;
+using ContactCenter.Web.API;
+using Microsoft.EntityFrameworkCore;
+using ContactCenter.Data.Entities;
 
 namespace EDRSM.API.Controllers
 {
-    public class RequestedPaymentPlanController : BaseApiController
+    public class RequestedPaymentPlanController : SysAPIController
     {
-        private readonly IRequestedPaymentPlanRepository _requestedPaymentPlanRepository;
         private readonly UserManager<ContactUser> _userManager;
 
         public RequestedPaymentPlanController(
-            UserManager<ContactUser> userManager,
-            IRequestedPaymentPlanRepository requestedPaymentPlanRepository
+            UserManager<ContactUser> userManager
             )
         {
             _userManager = userManager;
-            _requestedPaymentPlanRepository = requestedPaymentPlanRepository;
         }
 
         [HttpGet]
         public async Task<ActionResult<IReadOnlyList<RequestedPaymentPlan>>> GetPlans()
         {
-            var plan = await _requestedPaymentPlanRepository.GetAllRequestedPaymentPlansAsync();
+            var plan = await Db.RequestedPaymentPlans.ToListAsync();
             return Ok(plan);
         }
 
@@ -38,7 +36,7 @@ namespace EDRSM.API.Controllers
                 return BadRequest("Invalid ID format.");
             }
 
-            var plan = await _requestedPaymentPlanRepository.GetRequestedPaymentPlanByIdAsync(guidId);
+            var plan = await Db.RequestedPaymentPlans.FindAsync(id);
             if (plan == null)
             {
                 return NotFound();
@@ -49,6 +47,7 @@ namespace EDRSM.API.Controllers
         [HttpPost]
         public async Task<ActionResult<RequestedPaymentPlan>> PostPlan(CreateRequestedPaymentPlanDto planDto)
         {
+            // Find the user who is submitting the payment plan
             var user = await _userManager.FindByIdAsync(planDto.UserId);
             if (user == null)
             {
@@ -56,10 +55,10 @@ namespace EDRSM.API.Controllers
             }
 
             var paymentPlanReference = IncidentReferenceGenerator.GeneratePaymentPlanReference();
-            // Map the DTO to the entity
+
             var plan = new RequestedPaymentPlan
             {
-                Id = Guid.NewGuid(), // Generate a new GUID
+                Id = Guid.NewGuid(),
                 ApplicationReference = paymentPlanReference,
                 SelectedAccount = planDto.SelectedAccount,
                 AmountDue = planDto.AmountDue,
@@ -78,9 +77,13 @@ namespace EDRSM.API.Controllers
                 CellphoneNumber = user.PhoneNumber
             };
 
-            var createdPlan = await _requestedPaymentPlanRepository.CreateRequestedPaymentPlanAsync(plan);
+            await Db.RequestedPaymentPlans.AddAsync(plan);
+
+            await Db.SaveChangesAsync();
+
             return CreatedAtAction(nameof(GetPlan), new { id = plan.Id }, plan);
         }
+
 
         [HttpPut("{id}")]
         public async Task<ActionResult> UpdatePlan(string id, RequestedPaymentPlan plan)
@@ -95,14 +98,24 @@ namespace EDRSM.API.Controllers
                 return BadRequest("ID mismatch.");
             }
 
-            var updated = await _requestedPaymentPlanRepository.UpdateRequestedPaymentPlanAsync(plan);
-            if (!updated)
+            var existingPlan = await Db.RequestedPaymentPlans.FindAsync(guid);
+            if (existingPlan == null)
             {
-                return NotFound();
+                return NotFound("Payment plan not found.");
             }
+
+            existingPlan.ReviewStatus = plan.ReviewStatus;
+            existingPlan.ReviewComment = plan.ReviewComment;
+            existingPlan.RequestReviewedDate = DateTime.Now;
+            existingPlan.AdminReviewerId = plan.AdminReviewerId;
+            existingPlan.AdminReviewerName = plan.AdminReviewerName;
+            existingPlan.AdminReviewerSurname = plan.AdminReviewerSurname;
+
+            await Db.SaveChangesAsync();
 
             return NoContent();
         }
+
 
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeletePlan(string id)
@@ -112,13 +125,18 @@ namespace EDRSM.API.Controllers
                 return BadRequest("Invalid ID format.");
             }
 
-            var deleted = await _requestedPaymentPlanRepository.DeleteRequestedPaymentPlanAsync(guid);
-            if (!deleted)
+            var plan = await Db.RequestedPaymentPlans.FindAsync(guid);
+            if (plan == null)
             {
-                return NotFound();
+                return NotFound("Payment plan not found.");
             }
+
+            Db.RequestedPaymentPlans.Remove(plan);
+
+            await Db.SaveChangesAsync();
 
             return NoContent();
         }
+
     }
 }
