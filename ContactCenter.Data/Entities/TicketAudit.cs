@@ -8,7 +8,7 @@ namespace ContactCenter.Data
     {
         public int Id { get; set; }
         public Guid TicketId { get; set; }
-        public int StatusId { get; set; }
+        public Lib.TicketStatus StatusId { get; set; }
         public string StatusName { get; set; }
         public DateTime StatusChangeTime { get; set; }
         public string UserId { get; set; }
@@ -18,7 +18,6 @@ namespace ContactCenter.Data
         public string Description { get; set; }
 
        
-        public TicketStatus Status { get; set; }
         [JsonIgnore]  // Prevents cyclical reference during serialization
         public virtual Ticket Ticket { get; set; }
     }

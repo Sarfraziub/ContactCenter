@@ -115,7 +115,7 @@
                             {
                                 <tr>
                                     <td>@audit.StatusChangeTime.ToLongDateTime()</td>
-                                    <td>@audit.StatusName</td>
+                                    <td>@audit.StatusId</td>
                                     <td>@audit.NameOfUpdater @audit.SurnameOfUpdater</td>
                                     
                                     <td>@audit.Description</td>
@@ -135,11 +135,12 @@
                         <div class="col-md-4">
                             <h4>Incident Status</h4>
                             <select class="form-control" id="incidentStatus" onchange="updateStatus('@item.Id', this.value)">
-                                @foreach (var status in Model.Statuses)
+                                @foreach (var status in Enum.GetValues(typeof(ContactCenter.Lib.TicketStatus)).Cast<ContactCenter.Lib.TicketStatus>())
                                 {
-                                    <option value="@status.Id" selected="@(item.StatusId == status.Id ? "true" : null)">@status.StatusName</option>
+                                    <option value="@((int)status)" selected="@(item.StatusId == (int)status ? "true" : null)">@status.ToString()</option>
                                 }
                             </select>
+
                         </div>
                     </div>
                     <div class="row status-inputs" style="display: none;">

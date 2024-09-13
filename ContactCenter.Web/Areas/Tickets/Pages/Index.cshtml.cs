@@ -1,8 +1,6 @@
 using ContactCenter.Data;
 using ContactCenter.Data.Entities;
 using ContactCenter.Lib;
-
-//using ContactCenter.Lib;
 using ContactCenter.Web.DTOs;
 using ContactCenter.Web.Pages;
 using EDRSM.API.DTOs;
@@ -29,15 +27,14 @@ namespace ContactCenter.Web.Areas.Tickets.Pages
 
         public bool FlgCurrentUserOnline { get; set; }
         public User Assignee { get; set; }
-        public List<Data.TicketStatus> Statuses { get; set; }
+        public List<TicketStatus> Statuses { get; set; }
 
         public void OnGet(Guid? id, int? p, int? ps, string q)
         {
             PageTitle = Title = "Tickets";
-            this.Statuses = _context.TicketStatuses.ToList();
+            this.Statuses = Enum.GetValues(typeof(TicketStatus)).Cast<TicketStatus>().ToList();
 
             var dbtickets = _context.Tickets
-                .Include(c => c.TicketStatus)
                 .Include(c => c.TicketAudits)
                 .Include(c => c.Assignee)
                 .OrderByDescending(x => x.Id)
@@ -45,11 +42,7 @@ namespace ContactCenter.Web.Areas.Tickets.Pages
 
             var incidentList = dbtickets.Select(incident =>
             {
-                var statusName = this.Statuses
-                    .Where(user => user.Id == incident.StatusId)
-                    .Select(user => user.StatusName)
-                    .FirstOrDefault();
-
+                var statusName = Enum.GetName(typeof(TicketStatus), incident.StatusId);
                 incident.StatusName = statusName;
                 return incident;
             }).AsQueryable();
@@ -82,13 +75,10 @@ namespace ContactCenter.Web.Areas.Tickets.Pages
                 SubmitIncidentAuditDto incidentAuditDto = new SubmitIncidentAuditDto()
                 {
                     TicketId = model.TicketId,
-                    StatusId = model.StatusId,
-                    StatusName = model.StatusName,
-                    //UserId = incident.UserId,
-                    // ShortSummary = model.Summary,
+                    StatusId = (int)model.StatusId,
+                    StatusName = model.StatusId.ToString(),
                     Description = model.Description,
                     UpdatedBy = user.LoginId
-
                 };
                 var incidentAudit = await submitIncidentAudit(incidentAuditDto);
                 incident.StatusId = model.StatusId;
@@ -96,16 +86,16 @@ namespace ContactCenter.Web.Areas.Tickets.Pages
             }
             return new JsonResult("my result");
         }
+
         private async Task<TicketAudit> submitIncidentAudit(SubmitIncidentAuditDto submitIncidentAuditDto)
         {
             var incidentAudit = new TicketAudit
             {
                 TicketId = submitIncidentAuditDto.TicketId,
-                StatusId = submitIncidentAuditDto.StatusId,
+                StatusId = (TicketStatus)submitIncidentAuditDto.StatusId, // Convert int back to enum
                 StatusName = submitIncidentAuditDto.StatusName,
                 StatusChangeTime = DateTime.Now,
                 UserId = submitIncidentAuditDto.UserId,
-                //ShortSummary = submitIncidentAuditDto.ShortSummary,
                 Description = submitIncidentAuditDto.Description,
                 NameOfUpdater = submitIncidentAuditDto.UpdatedBy
             };

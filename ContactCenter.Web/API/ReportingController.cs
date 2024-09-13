@@ -2,9 +2,11 @@ using ContactCenter.Data;
 using ContactCenter.Data.Entities;
 using ContactCenter.Lib;
 using ContactCenter.Web.API;
+using ContactCenter.Web.DTOs;
 using EDRSM.API.DTOs;
 using EDRSM.API.Errors;
 using EDRSM.API.Helpers;
+using Humanizer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -23,22 +25,51 @@ namespace EDRSM.API.Controllers
         }
 
         [HttpGet("incident-types")]
-        public async Task<ActionResult<IReadOnlyList<ContactCenter.Data.TicketType>>> GeIncidentTypes()
+        public ActionResult<IReadOnlyList<TicketTypeDto>> GetIncidentTypes()
         {
-            return Ok(await Db.TicketTypes.ToListAsync());
+            // Convert enum values to DTOs
+            var incidentTypes = Enum.GetValues(typeof(TicketType))
+                .Cast<TicketType>()
+                .Select(type => new TicketTypeDto
+                {
+                    Id = (int)type,
+                    TypeName = type.ToString()
+                })
+                .ToList();
+
+            return Ok(incidentTypes);
         }
 
+
         [HttpGet("incident-headings")]
-        public async Task<ActionResult<IReadOnlyList<TicketHeading>>> GeIncidentHeadings()
+         public ActionResult<IReadOnlyList<TicketHeadingDto>> GetIncidentHeadings()
         {
-            return Ok(await Db.TicketHeadings.ToListAsync());
+            var incidentHeadings = Enum.GetValues(typeof(TicketHeading))
+                .Cast<TicketHeading>()
+                .Select(heading => new TicketHeadingDto
+                {
+                    Id = (int)heading,
+                    HeadingName = heading.ToString()
+                })
+                .ToList();
+
+            return Ok(incidentHeadings);
         }
 
         [HttpGet("incident-statuses")]
-        public async Task<ActionResult<IReadOnlyList<ContactCenter.Data.TicketStatus>>> GetIncidentStatuses()
+        public ActionResult<IReadOnlyList<TicketStatusDto>> GetIncidentStatuses()
         {
-            return Ok(await Db.TicketStatuses.ToListAsync());
+            var statuses = Enum.GetValues(typeof(TicketStatus))
+                                .Cast<TicketStatus>()
+                                .Select(status => new TicketStatusDto
+                                {
+                                    Id = (int)status,
+                                    StatusName = status.ToString()
+                                }).ToList();
+
+            return Ok(statuses);
         }
+
         [HttpPost("submit-incident")]
         public async Task<ActionResult<ReturnTicketDto>> SubmitIncidentReport([FromBody] SubmitTicketDto submitIncidentDto)
         {
@@ -111,8 +142,8 @@ namespace EDRSM.API.Controllers
             var incidentAudit = new TicketAudit
             {
                 TicketId = ticket.Id,
-                StatusId = submitIncidentDto.StatusId,
-                StatusName = Db.TicketStatuses.FirstOrDefault(x => x.Id == submitIncidentDto.StatusId)?.StatusName,
+                StatusId = (TicketStatus)submitIncidentDto.StatusId,
+                StatusName = Enum.GetName(typeof(ContactCenter.Lib.TicketStatus), submitIncidentDto.StatusId),
                 StatusChangeTime = ticket.AssignmentDate ?? DateTime.Now,
                 UserId = submitIncidentDto.UserId,
                 // ShortSummary = ticketDto.Description,
@@ -147,7 +178,7 @@ namespace EDRSM.API.Controllers
             var incidentAudit = new TicketAudit
             {
                 TicketId = submitIncidentAuditDto.TicketId,
-                StatusId = submitIncidentAuditDto.StatusId,
+                StatusId = (TicketStatus)submitIncidentAuditDto.StatusId,
                 StatusName = submitIncidentAuditDto.StatusName,
                 StatusChangeTime = DateTime.Now,
                 UserId = submitIncidentAuditDto.UserId,

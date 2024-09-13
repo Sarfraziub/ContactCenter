@@ -3,6 +3,7 @@ using System;
 using ContactCenter.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ContactCenter.Data.Migrations
 {
     [DbContext(typeof(CCDbContext))]
-    partial class EDRSMContextModelSnapshot : ModelSnapshot
+    [Migration("20240913142719_RemoveTicketsTablesMigartion")]
+    partial class RemoveTicketsTablesMigartion
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

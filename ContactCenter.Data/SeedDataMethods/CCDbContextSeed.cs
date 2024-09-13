@@ -33,27 +33,6 @@ namespace ContactCenter.Data.SeedDataMethods
                 context.Countries.AddRange(countries);
             }
 
-            if (!context.TicketTypes.Any())
-            {
-                var ticketTypesData = File.ReadAllText("../ContactCenter.Data/SeedData/incidentTypes.json");
-                var incidentTypes = JsonSerializer.Deserialize<List<TicketType>>(ticketTypesData);
-                context.TicketTypes.AddRange(incidentTypes);
-            }
-
-            if (!context.TicketHeadings.Any())
-            {
-                var ticketHeadings = File.ReadAllText("../ContactCenter.Data/SeedData/incidentHeadings.json");
-                var incidentHeadings = JsonSerializer.Deserialize<List<TicketHeading>>(ticketHeadings);
-                context.TicketHeadings.AddRange(incidentHeadings);
-            }
-
-            if (!context.TicketStatuses.Any())
-            {
-                var incidentStatusesData = File.ReadAllText("../ContactCenter.Data/SeedData/incidentStatuses.json");
-                var ticketStatuses = JsonSerializer.Deserialize<List<TicketStatus>>(incidentStatusesData);
-                context.TicketStatuses.AddRange(ticketStatuses);
-            }
-
             if (!context.Councillors.Any())
             {
                 var councillorsData = File.ReadAllText("../ContactCenter.Data/SeedData/councillors.json");

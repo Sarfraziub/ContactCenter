@@ -43,9 +43,6 @@ namespace ContactCenter.Data
         public virtual DbSet<UserSession> UserSessions { get; set; }
         public virtual DbSet<Attachment> Attachments { get; set; }
         public virtual DbSet<UserExternalLogin> UserExternalLogins { get; set; }
-        public virtual DbSet<TicketType> TicketTypes { get; set; }
-        public virtual DbSet<TicketHeading> TicketHeadings { get; set; }
-        public virtual DbSet<TicketStatus> TicketStatuses { get; set; }
         public virtual DbSet<TicketAudit> TicketAudites { get; set; }
 
 
@@ -822,8 +819,6 @@ namespace ContactCenter.Data
 
                 entity.HasIndex(e => e.TicketId, "IX_TicketAudit_TicketId");
 
-                entity.HasIndex(e => e.StatusId, "IX_TicketAudit_StatusId");
-
                 entity.Property(e => e.Id).ValueGeneratedOnAdd(); // Auto-generate Id values
 
                 entity.Property(e => e.StatusChangeTime).HasColumnType("timestamp without time zone");
@@ -837,7 +832,8 @@ namespace ContactCenter.Data
                 // entity.Property(e => e.ShortSummary).HasMaxLength(256);
              
                 entity.Property(e => e.StatusName).HasMaxLength(128);
-
+                entity.Property(e => e.StatusId)
+                .HasConversion<int>(); 
                 entity.Property(e => e.Description).HasMaxLength(512);
 
                 entity.HasOne(d => d.Ticket)
@@ -846,54 +842,7 @@ namespace ContactCenter.Data
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("TicketAudit_TicketId_fkey");
 
-                entity.HasOne(d => d.Status)
-                    .WithMany(p => p.TicketAudits)
-                    .HasForeignKey(d => d.StatusId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("TicketAudit_StatusId_fkey");
             });
-
-            modelBuilder.Entity<TicketHeading>(entity =>
-            {
-                entity.ToTable("TicketHeading");
-
-                entity.HasIndex(e => e.TicketTypeId, "IX_TicketHeading_TicketTypeId");
-
-                entity.Property(e => e.Id).ValueGeneratedOnAdd(); // Auto-generate Id values
-
-                entity.Property(e => e.HeadingName)
-                    .IsRequired()
-                    .HasMaxLength(128);
-
-                entity.HasOne(d => d.TicketType)
-                    .WithMany(p => p.TicketHeadings)
-                    .HasForeignKey(d => d.TicketTypeId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("TicketHeading_TicketTypeId_fkey");
-            });
-
-            modelBuilder.Entity<TicketStatus>(entity =>
-            {
-                entity.ToTable("TicketStatus");
-
-                entity.Property(e => e.Id).ValueGeneratedOnAdd(); // Auto-generate Id values
-
-                entity.Property(e => e.StatusName)
-                    .IsRequired()
-                    .HasMaxLength(128);
-            });
-
-            modelBuilder.Entity<TicketType>(entity =>
-            {
-                entity.ToTable("TicketType");
-
-                entity.Property(e => e.Id).ValueGeneratedOnAdd(); // Auto-generate Id values
-
-                entity.Property(e => e.TypeName)
-                    .IsRequired()
-                    .HasMaxLength(128);
-            });
-
 
             OnModelCreatingPartial(modelBuilder);
         }

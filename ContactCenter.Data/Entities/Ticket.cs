@@ -30,7 +30,7 @@ namespace ContactCenter.Data
         [NotMapped]
         public string StatusName { get; set; }
         public int TicketHeadingId { get; set; }
-        public TicketStatus TicketStatus { get; set; }
+        public Lib.TicketStatus TicketStatus { get; set; }
         public virtual User Assignee { get; set; }
         public virtual TicketCategory Category { get; set; }
         public virtual Contact Contact { get; set; }
