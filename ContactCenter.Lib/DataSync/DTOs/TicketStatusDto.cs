@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
+﻿
 namespace ContactCenter.Web.DTOs
 {
     public class TicketStatusDto

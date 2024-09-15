@@ -6,7 +6,6 @@ using ContactCenter.Web.DTOs;
 using EDRSM.API.DTOs;
 using EDRSM.API.Errors;
 using EDRSM.API.Helpers;
-using Humanizer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
