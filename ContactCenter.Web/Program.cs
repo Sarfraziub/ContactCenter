@@ -60,7 +60,7 @@ var userManager = services.GetRequiredService<UserManager<ContactUser>>();
 var logger = services.GetRequiredService<ILogger<Program>>();
 try
 {
-    //await edrsmContext.Database.MigrateAsync();
+    //await edrsmContext.Database.MigrateAsync(); 
     //await identityContext.Database.MigrateAsync();
     await CCDbContextSeed.SeedAsync(edrsmContext);
     await EdrsmAppUserSeed.SeedUsersAsync(userManager);
